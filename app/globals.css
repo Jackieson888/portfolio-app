@@ -5,6 +5,10 @@
   --foreground: #353C40;
 }
 
+@theme {
+  --color-primary-500: #607D8B;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

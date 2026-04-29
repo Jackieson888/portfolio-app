@@ -1,5 +1,11 @@
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
+function getFileExtension(fileKey) {
+    if (typeof fileKey !== 'string') return '';
+    const match = fileKey.match(/\.([^.]+)$/);
+    return match ? match[1] : '';
+}
+
 export async function GET() {
     const {
         AWS_REGION,
@@ -24,7 +30,7 @@ export async function GET() {
         let allObjects = [];
         let continuationToken;
         let iterationCount = 0;
-        const MAX_ITERATIONS = 1000;
+        const MAX_ITERATIONS = 100;
 
         do {
             const command = new ListObjectsV2Command({
@@ -52,6 +58,7 @@ export async function GET() {
             objects: allObjects.map(obj => ({
                 key: obj.Key,
                 size: obj.Size,
+                type: getFileExtension(obj.Key),
                 lastModified: obj.LastModified,
                 url: `https://${S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${obj.Key}`
             })),
