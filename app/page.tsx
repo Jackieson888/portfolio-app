@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Home() {
   const [active, setActive] = useState(false)
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="flex items-start w-full justify-between">
         <div>
           <h1 className="text-2xl text-primary-500 font-sans font-semibold">Jackson Schacher</h1>
@@ -24,8 +24,18 @@ export default function Home() {
           className="rounded-md"
         />
       </div>
+
       <div className="flex justify-center w-full">
-        <button>Chat with Me</button>
+        <Link
+          href="/chat"
+          prefetch={active ? null : false}
+          onMouseEnter={() => setActive(true)}
+          className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative font-mono"
+        >
+          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+            <span>AI Chat App</span>
+          </button>
+        </Link>
       </div>
       <div className="flex justify-center w-full">
         <Link
@@ -34,8 +44,14 @@ export default function Home() {
           onMouseEnter={() => setActive(true)}
           className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative font-mono"
         >
-          <button>Find a Song</button>
+          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+            <span>Song Questionaire App</span>
+          </button>
         </Link>
+      </div>
+
+      <div className="flex justify-center w-full">
+        <Image src="@mdi/svg/account-circle.svg" alt="account-circle" width={32} height={32} />
       </div>
     </div>
   );
