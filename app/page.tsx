@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import IconTag from "./components/iconTag";
-import iconData from "./data/iconData.json";
+import iconData from "./data/skillIconData.json";
 
 export default function Home() {
   const [active, setActive] = useState(false)
