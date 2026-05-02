@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
+import IconTag from "./components/iconTag";
+import iconData from "./data/iconData.json";
 
 export default function Home() {
   const [active, setActive] = useState(false)
@@ -50,8 +52,10 @@ export default function Home() {
         </Link>
       </div>
 
-      <div className="flex justify-center w-full">
-        <Image src="@mdi/svg/account-circle.svg" alt="account-circle" width={32} height={32} />
+      <div className="flex flex-wrap w-full justify-around mt-2">
+        {iconData.map((icon) => (
+          <IconTag iconData={icon} key={icon.title} />
+        ))}
       </div>
     </div>
   );
