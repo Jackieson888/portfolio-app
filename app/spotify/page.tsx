@@ -3,10 +3,34 @@
 import { useState } from "react";
 import Image from "next/image";
 
+type SpotifyImage = {
+    url: string;
+    height: number | null;
+    width: number | null;
+};
+
+type SpotifyAlbum = {
+    name: string;
+    images: SpotifyImage[];
+};
+
+type SpotifyTrack = {
+    name: string;
+    album: SpotifyAlbum;
+};
+
+type SpotifyTracksResponse = {
+    items: SpotifyTrack[];
+};
+
+export type SpotifyData = {
+    tracks: SpotifyTracksResponse;
+};
+
 export default function Page() {
-    const [spotifyData, setSpotifyData] = useState(null);
+    const [spotifyData, setSpotifyData] = useState<SpotifyData | null>(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     async function getSpotifyData() {
         try {
@@ -19,7 +43,7 @@ export default function Page() {
                 throw new Error(`Server responded with ${res.status}`);
             }
 
-            const data = await res.json();
+            const data: SpotifyData = await res.json();
             setSpotifyData(data);
         } catch (err) {
             console.error(err);
