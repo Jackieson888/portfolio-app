@@ -8,22 +8,22 @@ function getFileExtension(fileKey: string | undefined) {
 
 export async function GET() {
     const {
-        AWS_REGION,
-        AWS_ACCESS_KEY_ID,
-        AWS_SECRET_ACCESS_KEY,
+        S3_REGION,
+        S3_ACCESS_KEY_ID,
+        S3_SECRET_ACCESS_KEY,
         S3_BUCKET_NAME
     } = process.env;
 
-    if (!AWS_REGION || !AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !S3_BUCKET_NAME) {
+    if (!S3_REGION || !S3_ACCESS_KEY_ID || !S3_SECRET_ACCESS_KEY || !S3_BUCKET_NAME) {
         return Response.json({ error: "Missing required AWS configuration" }, { status: 500 });
     }
 
     try {
         const s3 = new S3Client({
-            region: AWS_REGION,
+            region: S3_REGION,
             credentials: {
-                accessKeyId: AWS_ACCESS_KEY_ID,
-                secretAccessKey: AWS_SECRET_ACCESS_KEY,
+                accessKeyId: S3_ACCESS_KEY_ID,
+                secretAccessKey: S3_SECRET_ACCESS_KEY,
             },
         });
 
@@ -56,7 +56,7 @@ export async function GET() {
                 type: getFileExtension(obj.Key),
                 lastModified: obj.LastModified ?? null,
                 url: obj.Key
-                    ? `https://${S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${obj.Key}`
+                    ? `https://${S3_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com/${obj.Key}`
                     : null
             })),
         });
