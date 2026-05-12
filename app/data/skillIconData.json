@@ -20,7 +20,7 @@
         "path": "language-javascript.svg"
     },
     {
-        "title": "",
+        "title": "C#",
         "path": "language-csharp.svg"
     },
     {
@@ -28,11 +28,11 @@
         "path": "nodejs.svg"
     },
     {
-        "title": "",
+        "title": ".NET",
         "path": "dot-net.svg"
     },
     {
-        "title": "",
+        "title": "Golang",
         "path": "language-go.svg"
     },
     {
@@ -60,7 +60,7 @@
         "path": "material-design.svg"
     },
     {
-        "title": "",
+        "title": "C++",
         "path": "language-cpp.svg"
     },
     {

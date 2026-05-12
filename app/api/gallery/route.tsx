@@ -1,6 +1,6 @@
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
-function getFileExtension(fileKey) {
+function getFileExtension(fileKey: string) {
     if (typeof fileKey !== 'string') return '';
     const match = fileKey.match(/\.([^.]+)$/);
     return match ? match[1] : '';
@@ -27,7 +27,7 @@ export async function GET() {
             },
         });
 
-        let allObjects = [];
+        const allObjects = [];
         let continuationToken;
         let iterationCount = 0;
         const MAX_ITERATIONS = 100;
