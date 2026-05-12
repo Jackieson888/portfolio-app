@@ -1,6 +1,6 @@
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
-function getFileExtension(fileKey: string) {
+function getFileExtension(fileKey: string | undefined) {
     if (typeof fileKey !== 'string') return '';
     const match = fileKey.match(/\.([^.]+)$/);
     return match ? match[1] : '';
@@ -29,11 +29,9 @@ export async function GET() {
 
         const allObjects = [];
         let continuationToken;
-        let iterationCount = 0;
-        const MAX_ITERATIONS = 100;
 
         do {
-            const command = new ListObjectsV2Command({
+            const command: ListObjectsV2Command = new ListObjectsV2Command({
                 Bucket: S3_BUCKET_NAME,
                 ContinuationToken: continuationToken,
                 MaxKeys: 1000,
@@ -45,22 +43,21 @@ export async function GET() {
                 allObjects.push(...response.Contents);
             }
 
-            continuationToken = response.IsTruncated ? response.NextContinuationToken : undefined;
-            iterationCount++;
-
-            if (iterationCount > MAX_ITERATIONS) {
-                console.warn("Max pagination iterations reached. Stopping early.");
-                break;
-            }
+            continuationToken = response.IsTruncated
+                ? response.NextContinuationToken
+                : undefined;
         } while (continuationToken);
+
         return Response.json({
             count: allObjects.length,
             objects: allObjects.map(obj => ({
-                key: obj.Key,
-                size: obj.Size,
+                key: obj.Key ?? null,
+                size: obj.Size ?? null,
                 type: getFileExtension(obj.Key),
-                lastModified: obj.LastModified,
-                url: `https://${S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${obj.Key}`
+                lastModified: obj.LastModified ?? null,
+                url: obj.Key
+                    ? `https://${S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${obj.Key}`
+                    : null
             })),
         });
     } catch (error) {
