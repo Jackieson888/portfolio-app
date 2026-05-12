@@ -12,7 +12,7 @@ export default function Page() {
                         href={icon.link}
                         className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative font-mono"
                     >
-                        <IconTag iconData={icon} key={icon.title} />
+                        <IconTag iconData={icon} />
                     </Link>
                 ))}
             </div>

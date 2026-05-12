@@ -1,6 +1,9 @@
 let spotifyAccessToken: string | null = null;
 let spotifyTokenExpiresAt: number | null = null;
 
+import { genreData } from "@/app/data/spotifyGenres";
+
+
 async function fetchSpotifyAccessToken() {
   const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET_KEY } = process.env;
 
@@ -38,12 +41,20 @@ async function getValidSpotifyToken() {
   return spotifyAccessToken;
 }
 
+function getRandomizedSpotifyGenre() {
+  const genreNames = Object.keys(genreData);
+  const randomIndex = Math.floor(Math.random() * genreNames.length);
+  return genreNames[randomIndex];
+}
+
 export async function GET() {
   try {
     const token = await getValidSpotifyToken();
 
+    const randomGenre = getRandomizedSpotifyGenre();
+
     const res = await fetch(
-      "https://api.spotify.com/v1/search?q=remaster%2520track%3ADoxy%2520artist%3AMiles%2520Davis&type=track&limit=1",
+      `https://api.spotify.com/v1/search?q=remaster%2520genre%3A${randomGenre}&type=track&limit=1`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
