@@ -36,6 +36,7 @@ export default function Home() {
           width={128}
           height={128}
           className="rounded-md"
+          loading="eager"
         />
       </div>
       <div className="flex">

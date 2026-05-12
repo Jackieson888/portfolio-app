@@ -3,14 +3,18 @@ import { Google_Sans, Google_Sans_Code } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "./components/nav";
 
-const geistSans = Google_Sans({
-  variable: "--font-geist-sans",
+const googleSans = Google_Sans({
+  variable: "--font-google-sans",
   subsets: ["latin"],
+  fallback: ["Arial", "sans-serif"],
+  adjustFontFallback: false,
 });
 
-const geistMono = Google_Sans_Code({
-  variable: "--font-geist-mono",
+const googleMono = Google_Sans_Code({
+  variable: "--font-google-mono",
   subsets: ["latin"],
+  fallback: ["Arial", "sans-serif"],
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -26,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${googleSans.variable} ${googleMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Navbar />

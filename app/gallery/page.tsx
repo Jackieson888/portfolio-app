@@ -3,76 +3,63 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-function MediaTemplate({ file }) {
+type File = {
+  url: string;
+  key: string;
+  type: string;
+};
+
+function MediaTemplate({ file }: { file: File }) {
   if (file.type === 'mp4') {
     return (
       <video
-        width="320"
-        height="240"
         muted
         autoPlay
         loop
-        className="w-full h-full object-cover object-center"
+        className="w-full h-40 object-cover rounded-md"
       >
         <source src={file.url} />
-        Your browser does not support the video tag
       </video>
     );
   }
 
   return (
-    <Image
-      src={file.url}
-      alt={file.key}
-      width={128}
-      height={128}
-      className="rounded-md"
-    />
+    <div className="relative w-full h-40">
+      <Image
+        src={file.url}
+        alt={file.key}
+        fill
+        className="object-cover rounded-md"
+      />
+    </div>
   );
 }
 
 
 export default function Home() {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-
     async function fetchFiles() {
       try {
-        setLoading(true);
-        setError(null);
-
-        const res = await fetch("/api/gallery", { signal: controller.signal });
-        if (!res.ok) {
-          throw new Error(`Server responded with ${res.status}`);
-        }
+        const res = await fetch("/api/gallery");
+        if (!res.ok) throw new Error(`Server responded with ${res.status}`);
 
         const data = await res.json();
-
-        if (Array.isArray(data.objects)) {
-          setFiles(data.objects);
-        } else {
-          throw new Error("Invalid data format from API");
-        }
+        setFiles(Array.isArray(data.objects) ? data.objects : []);
       } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error("Error fetching files:", err);
-          setError("Failed to load files");
-        }
+        console.error("Error fetching files:", err);
+        setError("Failed to load files");
       } finally {
         setLoading(false);
       }
     }
 
     fetchFiles();
-
-    return () => {
-      controller.abort();
-    };
   }, []);
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
