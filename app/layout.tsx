@@ -1,42 +1,22 @@
-import type { Metadata } from "next";
-import { Google_Sans, Google_Sans_Code } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "./components/nav";
+import * as React from "react";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import theme from "@/src/theme";
 
-const googleSans = Google_Sans({
-  variable: "--font-google-sans",
-  subsets: ["latin"],
-  fallback: ["Arial", "sans-serif"],
-  adjustFontFallback: false,
-});
-
-const googleMono = Google_Sans_Code({
-  variable: "--font-google-mono",
-  subsets: ["latin"],
-  fallback: ["Arial", "sans-serif"],
-  adjustFontFallback: false,
-});
-
-export const metadata: Metadata = {
-  title: "Jackson Schacher",
-  description: "Profile Web Application",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${googleSans.variable} ${googleMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex flex-1 w-full min-h-fill max-w-3xl flex-col items-center justify-between py-4 px-4 bg-white dark:bg-black sm:items-start">
-          {children}
-        </main>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <InitColorSchemeScript attribute="class" />
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            {props.children}
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

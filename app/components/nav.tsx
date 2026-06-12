@@ -1,21 +1,21 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { useState } from 'react'
-import LoadingIndicator from './loading'
-import Image from 'next/image'
+import Link from "next/link";
+import { useState } from "react";
+import LoadingIndicator from "./loading";
+import Image from "next/image";
 
 const navItems = {
-  '/gallery': {
-    name: 'gallery',
+  "/gallery": {
+    name: "gallery",
   },
-  '/contact': {
-    name: 'contact me',
+  "/contact": {
+    name: "contact me",
   },
-}
+};
 
 export function Navbar() {
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState(false);
   return (
     <div className="lg:sticky lg:top-20">
       <nav
@@ -35,7 +35,8 @@ export function Navbar() {
               width={64}
               height={64}
               className="rounded-md"
-            /> <LoadingIndicator />
+            />{" "}
+            <LoadingIndicator />
           </Link>
           {Object.entries(navItems).map(([path, { name }]) => {
             return (
@@ -48,10 +49,10 @@ export function Navbar() {
               >
                 {name} <LoadingIndicator />
               </Link>
-            )
+            );
           })}
         </div>
       </nav>
     </div>
-  )
+  );
 }
