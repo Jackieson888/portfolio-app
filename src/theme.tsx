@@ -1,6 +1,7 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
 import { Roboto_Condensed } from "next/font/google";
+import { Gemunu_Libre } from "next/font/google";
 
 const roboto = Roboto_Condensed({
   weight: ["300", "400", "500", "700"],
@@ -8,12 +9,26 @@ const roboto = Roboto_Condensed({
   display: "swap",
 });
 
+const gemunu = Gemunu_Libre({
+  weight: ["600", "700"],
+  subsets: ["latin"],
+  display: "auto",
+});
+
 const theme = createTheme({
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: { light: true },
   cssVariables: {
     colorSchemeSelector: "class",
   },
   typography: {
+    h3: {
+      fontFamily: gemunu.style.fontFamily,
+      fontWeight: 700,
+    },
+    h5: {
+      fontFamily: gemunu.style.fontFamily,
+      fontWeight: 600,
+    },
     fontFamily: roboto.style.fontFamily,
   },
   palette: {
@@ -25,6 +40,27 @@ const theme = createTheme({
     },
     warning: {
       main: "#FFA837",
+    },
+    background: {
+      default: "#1E1E1E",
+      paper: "#E8E3D0",
+    },
+  },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          border: "3px solid black",
+          borderRadius: "12px",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: "8px",
+        },
+      },
     },
   },
 });

@@ -1,18 +1,10 @@
 "use client";
 
-import { Container, Box, Typography, Button } from "@mui/material";
-import LoadingIndicator from "./components/loading";
-
-const navItems = {
-  "/gallery": {
-    name: "gallery",
-    color: "primary",
-  },
-  "/contact": {
-    name: "contact me",
-    color: "secondary",
-  },
-};
+import { Container, Box, Stack } from "@mui/material";
+import SkillsCard from "./components/skillsCard";
+import ResumeCard from "./components/resumeCard";
+import ContactCard from "./components/contactCard";
+import ProjectsCard from "./components/projectsCard";
 
 export default function Home() {
   return (
@@ -26,16 +18,17 @@ export default function Home() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          Jackson Schacher
-        </Typography>
-        {Object.entries(navItems).map(([path, { name, color }]) => {
-          return (
-            <Button key={path} href={path} variant="contained" color={color}>
-              {name} <LoadingIndicator />
-            </Button>
-          );
-        })}
+        <Stack
+          spacing={{ xs: 1, sm: 2 }}
+          direction="column"
+          useFlexGap
+          sx={{ flexWrap: "wrap" }}
+        >
+          <ResumeCard />
+          <ContactCard />
+          <SkillsCard />
+          <ProjectsCard />
+        </Stack>
       </Box>
     </Container>
   );
