@@ -63,7 +63,7 @@ export default function ResumeCard() {
           useFlexGap
           sx={{ flexWrap: "wrap", justifyContent: "flex-end" }}
         >
-          {Object.entries(navItems).map(([path, { name, color }]) => {
+          {Object.entries(navItems).map(([path, { name }]) => {
             return (
               <Button key={path} href={path} variant="contained">
                 {name} <LoadingIndicator />
