@@ -11,11 +11,9 @@ import LoadingIndicator from "./loading";
 const navItems = {
   "/gallery": {
     name: "gallery",
-    color: "primary",
   },
   "/contact": {
     name: "contact me",
-    color: "secondary",
   },
 };
 
@@ -67,7 +65,7 @@ export default function ResumeCard() {
         >
           {Object.entries(navItems).map(([path, { name, color }]) => {
             return (
-              <Button key={path} href={path} variant="contained" color={color}>
+              <Button key={path} href={path} variant="contained">
                 {name} <LoadingIndicator />
               </Button>
             );

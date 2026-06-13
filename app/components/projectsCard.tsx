@@ -41,12 +41,7 @@ export default function ProjectsCard() {
           >
             {projectsData.map((data) => {
               return (
-                <Button
-                  key={data.title}
-                  href={data.link}
-                  variant="outlined"
-                  color={data.color}
-                >
+                <Button key={data.title} href={data.link} variant="outlined">
                   {data.title} <LoadingIndicator />
                 </Button>
               );
