@@ -1,21 +1,39 @@
-import IconTag from "../components/iconTag";
-import iconData from "../data/contactIconData.json";
-import Link from "next/link";
+"use client";
 
-export default function ContactPage() {
+import { Container, Box, Stack, Button, Typography } from "@mui/material";
+import ContactCard from "../components/contactCard";
+
+export default function Contact() {
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-wrap w-full justify-around mt-2">
-        {iconData.map((icon) => (
-          <Link
-            key={icon.title}
-            href={icon.link}
-            className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative font-mono"
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          my: 4,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Stack
+          spacing={{ xs: 1, sm: 2 }}
+          direction="column"
+          useFlexGap
+          sx={{ flexWrap: "wrap" }}
+        >
+          <ContactCard />
+          <Button
+            href={"./"}
+            variant="contained"
+            sx={{ width: "100%" }}
+            color="primary"
           >
-            <IconTag iconData={icon} />
-          </Link>
-        ))}
-      </div>
-    </div>
+            <Typography variant="button" sx={{ color: "black" }}>
+              Go Back
+            </Typography>
+          </Button>
+        </Stack>
+      </Box>
+    </Container>
   );
 }

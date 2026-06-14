@@ -8,12 +8,8 @@ function getFileExtension(fileKey: string | undefined) {
   return match ? match[1] : "";
 }
 
-const {
-  S3_REGION,
-  S3_ACCESS_KEY_ID,
-  S3_SECRET_ACCESS_KEY,
-  S3_BUCKET_NAME,
-} = process.env;
+const { S3_REGION, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_BUCKET_NAME } =
+  process.env;
 
 const s3 = new S3Client({
   region: S3_REGION!,
