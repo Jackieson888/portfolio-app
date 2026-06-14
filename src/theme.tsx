@@ -60,6 +60,18 @@ const theme = createTheme({
         root: {
           borderRadius: "8px",
         },
+        label: {
+          color: "black",
+          fontWeight: 500,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          borderRadius: "8px",
+          border: "3px solid",
+        },
       },
     },
   },

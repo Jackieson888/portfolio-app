@@ -1,17 +1,20 @@
 [
   {
-    "title": "Github",
+    "title": "github.com/Jackieson888",
     "path": "github.svg",
-    "link": "https://github.com/Jackieson888"
+    "link": "https://github.com/Jackieson888",
+    "color": "primary"
   },
   {
-    "title": "LinkedIn",
+    "title": "linkedin.com/in/jackson-schacher",
     "path": "linkedin.svg",
-    "link": "www.linkedin.com/in/jackson-schacher"
+    "link": "https://linkedin.com/in/jackson-schacher",
+    "color": "secondary"
   },
   {
-    "title": "Email",
+    "title": "jschacher8@gmail.com",
     "path": "email.svg",
-    "link": "jschacher8@gmail.com"
+    "link": "jschacher8@gmail.com",
+    "color": "warning"
   }
 ]

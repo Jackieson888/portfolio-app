@@ -1,10 +1,19 @@
 "use client";
 
+type ProjectItem = {
+  title: string;
+  path: string;
+  link: string;
+  color: "primary" | "secondary" | "warning" | "success" | "error" | "info";
+};
+
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { Box, Button, Typography, Divider, Stack } from "@mui/material";
-import projectsData from "../data/projectsData.json";
+import projectsDataJson from "../data/projectsData.json";
 import LoadingIndicator from "./loading";
+
+const projectsData = projectsDataJson as ProjectItem[];
 
 export default function ProjectsCard() {
   return (
@@ -37,12 +46,21 @@ export default function ProjectsCard() {
             spacing={{ xs: 1, sm: 2 }}
             direction="column"
             useFlexGap
-            sx={{ flexWrap: "wrap" }}
+            sx={{ flexWrap: "wrap", width: "100%" }}
           >
             {projectsData.map((data) => {
               return (
-                <Button key={data.title} href={data.link} variant="outlined">
-                  {data.title} <LoadingIndicator />
+                <Button
+                  key={data.title}
+                  href={data.link}
+                  variant="contained"
+                  sx={{ width: "100%" }}
+                  color={data.color}
+                >
+                  <Typography variant="button" sx={{ color: "black" }}>
+                    {data.title}
+                  </Typography>{" "}
+                  <LoadingIndicator />
                 </Button>
               );
             })}

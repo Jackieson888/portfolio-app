@@ -1,3 +1,5 @@
+"use client";
+
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -7,13 +9,21 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { Button, Stack } from "@mui/material";
 import LoadingIndicator from "./loading";
+import type { ButtonProps } from "@mui/material";
 
-const navItems = {
+type NavItem = {
+  name: string;
+  color: ButtonProps["color"];
+};
+
+const navItems: Record<string, NavItem> = {
   "/gallery": {
     name: "gallery",
+    color: "primary",
   },
   "/contact": {
     name: "contact me",
+    color: "secondary",
   },
 };
 
@@ -56,17 +66,26 @@ export default function ResumeCard() {
           solutions with a thoughtful UI/UX approach.
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ justifyContent: "flex-end" }}>
         <Stack
           spacing={{ xs: 1, sm: 2 }}
           direction="row"
           useFlexGap
           sx={{ flexWrap: "wrap", justifyContent: "flex-end" }}
         >
-          {Object.entries(navItems).map(([path, { name }]) => {
+          {Object.entries(navItems).map(([path, { name, color }]) => {
             return (
-              <Button key={path} href={path} variant="contained">
-                {name} <LoadingIndicator />
+              <Button
+                key={path}
+                href={path}
+                variant="contained"
+                color={color}
+                size="large"
+              >
+                <Typography variant="button" sx={{ color: "black" }}>
+                  {name}
+                </Typography>{" "}
+                <LoadingIndicator />
               </Button>
             );
           })}

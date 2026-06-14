@@ -1,10 +1,12 @@
 [
   {
     "title": "Game Gem",
-    "link": "https://game-gem.com"
+    "link": "https://game-gem.com",
+    "color": "primary"
   },
   {
     "title": "Tripr",
-    "link": "https://tripr.com"
+    "link": "https://tripr.com",
+    "color": "secondary"
   }
 ]
