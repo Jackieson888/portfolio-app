@@ -8,10 +8,10 @@ import ProjectsCard from "./components/projectsCard";
 
 export default function Home() {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="md">
       <Box
         sx={{
-          my: 4,
+          my: 2,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -25,7 +25,6 @@ export default function Home() {
           sx={{ flexWrap: "wrap" }}
         >
           <ResumeCard />
-          <ContactCard />
           <SkillsCard />
           <ProjectsCard />
         </Stack>

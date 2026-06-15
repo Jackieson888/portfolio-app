@@ -5,10 +5,10 @@ import ContactCard from "../components/contactCard";
 
 export default function Contact() {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="md">
       <Box
         sx={{
-          my: 4,
+          my: 2,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
