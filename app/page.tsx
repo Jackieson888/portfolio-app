@@ -3,8 +3,11 @@
 import { Container, Box, Stack } from "@mui/material";
 import SkillsCard from "./components/skillsCard";
 import ResumeCard from "./components/resumeCard";
-import ContactCard from "./components/contactCard";
+import ProfileCard from "./components/profileCard";
 import ProjectsCard from "./components/projectsCard";
+import DownloadCard from "./components/downloadCard";
+import FeaturesCard from "./components/featuresCard";
+import GalleryCard from "./components/galleryCard";
 
 export default function Home() {
   return (
@@ -24,8 +27,10 @@ export default function Home() {
           useFlexGap
           sx={{ flexWrap: "wrap" }}
         >
-          <ResumeCard />
+          <ProfileCard />
           <SkillsCard />
+          <FeaturesCard />
+          <DownloadCard />
           <ProjectsCard />
         </Stack>
       </Box>

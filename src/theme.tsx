@@ -25,6 +25,10 @@ const theme = createTheme({
       fontFamily: gemunu.style.fontFamily,
       fontWeight: 700,
     },
+    h4: {
+      fontFamily: gemunu.style.fontFamily,
+      fontWeight: 700,
+    },
     h5: {
       fontFamily: gemunu.style.fontFamily,
       fontWeight: 600,
@@ -71,6 +75,14 @@ const theme = createTheme({
         outlined: {
           borderRadius: "8px",
           border: "3px solid",
+        },
+      },
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          padding: "4px",
+          "--mui-spacing": "4px",
         },
       },
     },

@@ -1,13 +1,20 @@
 "use client";
 
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { Box, Chip, Typography, Divider, Stack } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Box,
+  Chip,
+  Typography,
+  Divider,
+  Stack,
+} from "@mui/material";
 import iconData from "../data/skillIconData.json";
+import Image from "next/image";
 
 export default function SkillsCard() {
   return (
-    <Card sx={{ maxWidth: "sm" }}>
+    <Card sx={{ maxWidth: "md" }}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           Skills
@@ -30,7 +37,19 @@ export default function SkillsCard() {
           >
             {iconData.map((data) => {
               return (
-                <Chip key={data.title} label={data.title} color="warning" />
+                <Chip
+                  key={data.title}
+                  label={data.title}
+                  color="warning"
+                  icon={
+                    <Image
+                      src={`icons/${data.path}`}
+                      alt={data.title}
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
               );
             })}
           </Stack>

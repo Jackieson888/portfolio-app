@@ -29,7 +29,7 @@ const navItems: Record<string, NavItem> = {
 
 export default function ResumeCard() {
   return (
-    <Card sx={{ maxWidth: "sm" }}>
+    <Card sx={{ maxWidth: "md" }}>
       <CardHeader
         avatar={
           <Avatar

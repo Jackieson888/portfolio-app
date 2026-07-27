@@ -18,7 +18,7 @@ const contactData = contactDataJson as ContactItem[];
 
 export default function ContactCard() {
   return (
-    <Card sx={{ maxWidth: "sm" }}>
+    <Card sx={{ maxWidth: "md" }}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           Contact Me

@@ -17,7 +17,7 @@ const projectsData = projectsDataJson as ProjectItem[];
 
 export default function ProjectsCard() {
   return (
-    <Card sx={{ maxWidth: "sm" }}>
+    <Card sx={{ maxWidth: "md" }}>
       <CardContent>
         <Stack
           spacing={{ xs: 1, sm: 2 }}
