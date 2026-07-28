@@ -1,12 +1,24 @@
 [
   {
+    "title": "This vs That",
+    "logo": "tvt-game-logo.png",
+    "link": "https://tvt-game.app",
+    "tags": ["MongoDB", "Next.js", "Cloudinary", "Auth0"],
+    "color": "primary",
+    "description": "A web application that allows users to compare two items and vote on which one they prefer. Built with MongoDB, Next.js, Cloudinary, and Auth0 for authentication."
+  },
+  {
     "title": "Game Gem",
     "link": "https://game-gem.com",
-    "color": "primary"
+    "tags": ["OpenAI", "Lambda", "IGDB API", "Next.js"],
+    "color": "secondary",
+    "description": "A web application that allows users to explore and discover new video games. Built with OpenAI, Lambda, IGDB API, and Next.js."
   },
   {
     "title": "Tripr",
     "link": "https://tripr.com",
-    "color": "secondary"
+    "tags": ["Vue", ".Net", "Mapbox"],
+    "color": "warning",
+    "description": "A web application that allows users to plan and book trips. Built with Vue, .Net, and Mapbox."
   }
 ]
