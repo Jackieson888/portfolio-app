@@ -1,19 +1,7 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
-import { Roboto_Condensed } from "next/font/google";
-import { Gemunu_Libre } from "next/font/google";
-
-const roboto = Roboto_Condensed({
-  weight: ["300", "400", "500", "700"],
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const gemunu = Gemunu_Libre({
-  weight: ["600", "700"],
-  subsets: ["latin"],
-  display: "auto",
-});
+import { gemunu, roboto } from "./fonts";
+import { blue, bodyMuted, ink, orange, paper, yellow } from "./tokens";
 
 const theme = createTheme({
   colorSchemes: { light: true },
@@ -21,68 +9,61 @@ const theme = createTheme({
     colorSchemeSelector: "class",
   },
   typography: {
-    h3: {
-      fontFamily: gemunu.style.fontFamily,
-      fontWeight: 700,
-    },
-    h4: {
-      fontFamily: gemunu.style.fontFamily,
-      fontWeight: 700,
-    },
-    h5: {
-      fontFamily: gemunu.style.fontFamily,
-      fontWeight: 600,
-    },
     fontFamily: roboto.style.fontFamily,
+    h1: { fontFamily: gemunu.style.fontFamily, fontWeight: 700 },
+    h2: { fontFamily: gemunu.style.fontFamily, fontWeight: 700 },
+    h3: { fontFamily: gemunu.style.fontFamily, fontWeight: 700 },
+    h4: { fontFamily: gemunu.style.fontFamily, fontWeight: 700 },
+    h5: { fontFamily: gemunu.style.fontFamily, fontWeight: 600 },
+    h6: { fontFamily: gemunu.style.fontFamily, fontWeight: 600 },
   },
   palette: {
-    primary: {
-      main: "#EA6137",
-    },
-    secondary: {
-      main: "#5796C1",
-    },
-    warning: {
-      main: "#FFA837",
-    },
+    primary: { main: orange },
+    secondary: { main: blue },
+    warning: { main: yellow },
     background: {
-      default: "#1E1E1E",
-      paper: "#E8E3D0",
+      default: paper,
+      paper: "#FFFFFF",
+    },
+    text: {
+      primary: ink,
+      secondary: bodyMuted,
     },
   },
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
-          border: "3px solid black",
+          border: `3px solid ${ink}`,
           borderRadius: "12px",
+          boxShadow: "none",
         },
       },
     },
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: "8px",
+          borderRadius: "6px",
+          border: `2px solid ${ink}`,
+          backgroundColor: paper,
+          height: "auto",
         },
         label: {
-          color: "black",
-          fontWeight: 500,
+          color: ink,
+          fontWeight: 600,
+          fontSize: "12px",
+          padding: "3px 10px",
         },
       },
     },
     MuiButton: {
       styleOverrides: {
-        outlined: {
-          borderRadius: "8px",
-          border: "3px solid",
-        },
-      },
-    },
-    MuiContainer: {
-      styleOverrides: {
         root: {
-          padding: "4px",
-          "--mui-spacing": "4px",
+          borderRadius: "8px",
+          textTransform: "none",
+        },
+        outlined: {
+          border: "3px solid",
         },
       },
     },

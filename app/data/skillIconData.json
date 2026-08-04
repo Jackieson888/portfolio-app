@@ -1,98 +1,122 @@
 [
-    {
-        "title": "React",
-        "path": "react.svg"
-    },
-    {
-        "title": "Angular",
-        "path": "angular.svg"
-    },
-    {
-        "title": "Vue",
-        "path": "vuejs.svg"
-    },
-    {
-        "title": "TypeScript",
-        "path": "language-typescript.svg"
-    },
-    {
-        "title": "JavaScript",
-        "path": "language-javascript.svg"
-    },
-    {
-        "title": "C#",
-        "path": "language-csharp.svg"
-    },
-    {
-        "title": "Node.js",
-        "path": "nodejs.svg"
-    },
-    {
-        "title": ".NET",
-        "path": "dot-net.svg"
-    },
-    {
-        "title": "Golang",
-        "path": "language-go.svg"
-    },
-    {
-        "title": "Sass",
-        "path": "sass.svg"
-    },
-    {
-        "title": "Tailwind",
-        "path": "tailwind.svg"
-    },
-    {
-        "title": "Bootstrap",
-        "path": "bootstrap.svg"
-    },
-    {
-        "title": "HTML 5",
-        "path": "language-html5.svg"
-    },
-    {
-        "title": "Vuetify",
-        "path": "vuetify.svg"
-    },
-    {
-        "title": "Material Design",
-        "path": "material-design.svg"
-    },
-    {
-        "title": "C++",
-        "path": "language-cpp.svg"
-    },
-    {
-        "title": "Git",
-        "path": "git.svg"
-    },
-    {
-        "title": "RESTful API",
-        "path": "api.svg"
-    },
-    {
-        "title": "AWS Services",
-        "path": "aws.svg"
-    },
-    {
-        "title": "Docker",
-        "path": "docker.svg"
-    },
-    {
-        "title": "Mapbox",
-        "path": "mapbox.svg"
-    },
-    {
-        "title": "Atlassian",
-        "path": "atlassian.svg"
-    },
-    {
-        "title": "Jira",
-        "path": "jira.svg"
-    },
-    {
-        "title": "VS Code",
-        "path": "microsoft-visual-studio-code.svg"
-    }
+  {
+    "title": "TypeScript",
+    "path": "language-typescript.svg",
+    "category": "Languages"
+  },
+  {
+    "title": "JavaScript",
+    "path": "language-javascript.svg",
+    "category": "Languages"
+  },
+  {
+    "title": "C#",
+    "path": "language-csharp.svg",
+    "category": "Languages"
+  },
+  {
+    "title": "Golang",
+    "path": "language-go.svg",
+    "category": "Languages"
+  },
+  {
+    "title": "C++",
+    "path": "language-cpp.svg",
+    "category": "Languages"
+  },
+  {
+    "title": "HTML 5",
+    "path": "language-html5.svg",
+    "category": "Languages"
+  },
+  {
+    "title": "React",
+    "path": "react.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Angular",
+    "path": "angular.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Vue",
+    "path": "vuejs.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Node.js",
+    "path": "nodejs.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": ".NET",
+    "path": "dot-net.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Sass",
+    "path": "sass.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Tailwind",
+    "path": "tailwind.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Bootstrap",
+    "path": "bootstrap.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Vuetify",
+    "path": "vuetify.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Material Design",
+    "path": "material-design.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "AWS Services",
+    "path": "aws.svg",
+    "category": "Cloud & Tools"
+  },
+  {
+    "title": "Docker",
+    "path": "docker.svg",
+    "category": "Cloud & Tools"
+  },
+  {
+    "title": "Git",
+    "path": "git.svg",
+    "category": "Cloud & Tools"
+  },
+  {
+    "title": "RESTful API",
+    "path": "api.svg",
+    "category": "Cloud & Tools"
+  },
+  {
+    "title": "Mapbox",
+    "path": "mapbox.svg",
+    "category": "Cloud & Tools"
+  },
+  {
+    "title": "Atlassian",
+    "path": "atlassian.svg",
+    "category": "Cloud & Tools"
+  },
+  {
+    "title": "Jira",
+    "path": "jira.svg",
+    "category": "Cloud & Tools"
+  },
+  {
+    "title": "VS Code",
+    "path": "microsoft-visual-studio-code.svg",
+    "category": "Cloud & Tools"
+  }
 ]

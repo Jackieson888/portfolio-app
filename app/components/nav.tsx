@@ -1,58 +1,100 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
-import LoadingIndicator from "./loading";
-import Image from "next/image";
+import { Box, Link as MuiLink, Typography } from "@mui/material";
+import LogoMark from "./logoMark";
+import { border, gutter, ink, mono, orange, paper } from "@/src/tokens";
 
-const navItems = {
-  "/gallery": {
-    name: "gallery",
-  },
-  "/contact": {
-    name: "contact me",
-  },
-};
+const navItems = [
+  { href: "#work", label: "Work" },
+  { href: "#toolkit", label: "Skills" },
+  { href: "#experience", label: "Experience" },
+];
 
 export function Navbar() {
-  const [active, setActive] = useState(false);
   return (
-    <div className="lg:sticky lg:top-20">
-      <nav
-        className="flex flex-row items-start relative px-0 pb-0 fade md:overflow-auto scroll-pr-6 md:relative"
-        id="nav"
+    <Box
+      component="nav"
+      sx={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        backgroundColor: paper,
+        borderBottom: border,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "16px",
+        px: gutter,
+        py: "14px",
+        flexWrap: "wrap",
+      }}
+    >
+      <MuiLink
+        href="#top"
+        underline="none"
+        sx={{ display: "flex", alignItems: "center", gap: "10px" }}
       >
-        <div className="flex flex-row items-center w-full justify-between space-x-0 mr-4">
-          <Link
-            href="/"
-            prefetch={active ? null : false}
-            onMouseEnter={() => setActive(true)}
-            className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative font-mono"
+        <LogoMark />
+        <Typography
+          variant="h6"
+          component="span"
+          sx={{ fontSize: 20, fontWeight: 700, letterSpacing: "0.5px", color: ink }}
+        >
+          Jackson Schacher
+        </Typography>
+      </MuiLink>
+
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "22px",
+          flexWrap: "wrap",
+        }}
+      >
+        {navItems.map(({ href, label }) => (
+          <MuiLink
+            key={href}
+            href={href}
+            underline="none"
+            sx={{
+              fontFamily: mono,
+              fontWeight: 700,
+              fontSize: 13,
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+              color: ink,
+              transition: "color .2s ease",
+              "&:hover": { color: orange },
+            }}
           >
-            <Image
-              src="/logo.png"
-              alt="Home"
-              width={64}
-              height={64}
-              className="rounded-md"
-            />{" "}
-            <LoadingIndicator />
-          </Link>
-          {Object.entries(navItems).map(([path, { name }]) => {
-            return (
-              <Link
-                key={path}
-                href={path}
-                prefetch={active ? null : false}
-                onMouseEnter={() => setActive(true)}
-                className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative font-mono"
-              >
-                {name} <LoadingIndicator />
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-    </div>
+            {label}
+          </MuiLink>
+        ))}
+        <MuiLink
+          href="#contact"
+          underline="none"
+          sx={{
+            fontFamily: mono,
+            fontWeight: 700,
+            fontSize: 13,
+            textTransform: "uppercase",
+            letterSpacing: "1px",
+            px: "18px",
+            py: "9px",
+            backgroundColor: orange,
+            color: ink,
+            border,
+            borderRadius: "8px",
+            transition: "background-color .2s ease, color .2s ease",
+            "&:hover": { backgroundColor: ink, color: paper },
+          }}
+        >
+          Let&apos;s Talk
+        </MuiLink>
+      </Box>
+    </Box>
   );
 }
+
+export default Navbar;

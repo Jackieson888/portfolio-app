@@ -1,7 +1,20 @@
 "use client";
 
-import { Grid, Paper, Typography, Card, CardContent } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import featuresDataJson from "../data/featuresData.json";
+import SectionHeader from "./sectionHeader";
+import {
+  accentAt,
+  bodyMuted,
+  border,
+  borderThin,
+  card,
+  gutter,
+  maxWidth,
+  mono,
+  paper,
+  shadow,
+} from "@/src/tokens";
 
 type FeatureItem = {
   title: string;
@@ -13,36 +26,74 @@ const featuresData = featuresDataJson as FeatureItem[];
 
 export default function FeaturesCard() {
   return (
-    <Card sx={{ maxWidth: "md" }}>
-      <CardContent>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-        >
-          {featuresData.map((data, index) => {
-            return (
-              <Grid key={index} size={{ xs: 2, sm: 4, md: 4 }}>
-                <Paper elevation={0} sx={{ p: 2 }}>
-                  <Typography variant="h5" component="div" color="primary">
-                    {data.title}
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    component="div"
-                    color="secondary"
-                  >
-                    {data.experience}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {data.description}
-                  </Typography>
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </CardContent>
-    </Card>
+    <Box
+      component="section"
+      id="expertise"
+      sx={{ maxWidth, mx: "auto", px: gutter, pt: "40px", pb: "96px" }}
+    >
+      <SectionHeader number="01" title="Core Expertise" />
+
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "24px",
+        }}
+      >
+        {featuresData.map((data, index) => (
+          <Box
+            key={data.title}
+            sx={{
+              backgroundColor: card,
+              border,
+              borderRadius: "10px",
+              overflow: "hidden",
+              transition: "transform .2s ease, box-shadow .2s ease",
+              "&:hover": {
+                transform: "translateY(-6px)",
+                boxShadow: shadow(8),
+              },
+            }}
+          >
+            <Box sx={{ height: "10px", backgroundColor: accentAt(index) }} />
+            <Box sx={{ p: "22px" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "10px",
+                  mb: "10px",
+                }}
+              >
+                <Typography variant="h3" sx={{ fontSize: 22, fontWeight: 600, m: 0 }}>
+                  {data.title}
+                </Typography>
+                <Box
+                  component="span"
+                  sx={{
+                    fontFamily: mono,
+                    fontSize: 12,
+                    backgroundColor: paper,
+                    border: borderThin,
+                    borderRadius: "6px",
+                    px: "8px",
+                    py: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {data.experience}
+                </Box>
+              </Box>
+              <Typography
+                sx={{ fontSize: 14.5, lineHeight: 1.55, color: bodyMuted, m: 0 }}
+              >
+                {data.description}
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+    </Box>
   );
 }

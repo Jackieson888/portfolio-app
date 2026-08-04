@@ -1,7 +1,48 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background-image: url(../public/background-vector.png);
-  background-repeat: repeat;
-  background-size: 100%;
+  margin: 0;
+  background: #eee6d3;
+  overflow-x: hidden;
+}
+
+/* Keep anchored sections clear of the sticky nav when jumped to. */
+section[id] {
+  scroll-margin-top: 84px;
+}
+
+@keyframes slowSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -3,18 +3,18 @@
     "title": "github.com/Jackieson888",
     "path": "github.svg",
     "link": "https://github.com/Jackieson888",
-    "color": "primary"
+    "accent": "#EA6137"
   },
   {
     "title": "linkedin.com/in/jackson-schacher",
     "path": "linkedin.svg",
     "link": "https://linkedin.com/in/jackson-schacher",
-    "color": "secondary"
+    "accent": "#5796C1"
   },
   {
     "title": "jschacher8@gmail.com",
     "path": "email.svg",
-    "link": "jschacher8@gmail.com",
-    "color": "warning"
+    "link": "mailto:jschacher8@gmail.com",
+    "accent": "#FFA837"
   }
 ]
