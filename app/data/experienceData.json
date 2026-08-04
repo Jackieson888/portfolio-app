@@ -1,42 +1,75 @@
 {
   "work": [
     {
-      "title": "Full-Stack Engineer",
-      "org": "Sekady Capital LLC",
+      "title": "Full-Stack Software Engineer",
+      "org": "Sekady Capital",
+      "location": "Fruitland, ID",
       "dates": "2021 — 2026",
-      "logo": "sekady-logo.png"
+      "logo": "sekady-logo.png",
+      "points": [
+        "Owned major product areas end-to-end, from design through production rollout, instrumentation, and long-term maintenance.",
+        "Engineered REST and GraphQL integrations across distributed services, reducing integration failures and improving cross-service data consistency under load.",
+        "Designed and maintained AWS infrastructure supporting distributed workloads, background processing, and scalable API services.",
+        "Used Claude Code, Copilot, and custom LLM agents to accelerate delivery, improve test coverage, and automate documentation."
+      ]
     },
     {
-      "title": "Behavior Support Specialist",
+      "title": "Behavioral Support Specialist",
       "org": "Developmental Concepts | Consumer Direct Care Network Idaho",
-      "dates": "2014 — 2020",
-      "logo": "cdid-logo.png"
+      "location": "Boise, ID",
+      "dates": "2014 — 2021",
+      "logo": "cdid-logo.png",
+      "points": [
+        "Designed data-driven support programs built on daily behavioral logging and analysis.",
+        "Solved problems under pressure using structured crisis-management techniques."
+      ]
     },
     {
       "title": "Technical Support Analyst",
-      "org": "Galexis Technologies",
+      "org": "Galexis Technology",
+      "location": "Pullman, WA",
       "dates": "2013 — 2014",
-      "logo": "galexis-logo.png"
+      "logo": "galexis-logo.png",
+      "points": [
+        "Deployed infrastructure for mid-to-large organizations across cloud-native and on-prem systems.",
+        "Configured networks and maintained environments across diverse corporate deployments."
+      ]
     }
   ],
   "education": [
     {
       "title": "Human Centered Design Certificate",
       "org": "IxDF (Interaction Design Foundation)",
+      "location": "",
       "dates": "2024",
-      "logo": "ixdf-logo.png"
+      "logo": "ixdf-logo.png",
+      "points": [
+        "Universal Design Principles",
+        "Human-Centered Design",
+        "Design Thinking"
+      ]
     },
     {
       "title": "Full-Stack Development Certificate",
       "org": "Boise CodeWorks",
+      "location": "Boise, ID",
       "dates": "2021",
-      "logo": "cw-logo.png"
+      "logo": "cw-logo.png",
+      "points": [
+        "Completed a 500+ hour, high‑intensity full‑stack engineering program at CodeWorks, building and deploying production‑ready applications across modern languages, frameworks, and cloud‑based architectures."
+      ]
     },
     {
       "title": "B.S. Virtual Technology and Design",
       "org": "University of Idaho",
+      "location": "Moscow, ID",
       "dates": "2020",
-      "logo": "ui-logo.png"
+      "logo": "ui-logo.png",
+      "points": [
+        "Human Computer Interaction",
+        "Game engine development",
+        "3D modeling and animation"
+      ]
     }
   ]
 }

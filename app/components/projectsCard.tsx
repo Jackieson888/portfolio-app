@@ -1,13 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Button, Chip, IconButton, Link as MuiLink, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  IconButton,
+  Link as MuiLink,
+  Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import projectsDataJson from "../data/projectsData.json";
 import SectionHeader from "./sectionHeader";
+import SectionShapes, { type Shape } from "./sectionShapes";
 import {
   accentAt,
+  blue,
   bodyMuted,
   border,
   borderThin,
@@ -20,6 +29,7 @@ import {
   paper,
   paperShade,
   shadow,
+  yellow,
 } from "@/src/tokens";
 
 type CaseStudy = {
@@ -45,6 +55,8 @@ type ProjectItem = {
   accent: string;
   /** "live" embeds the real deploy; "placeholder" is for sites that block framing. */
   frame: "live" | "placeholder";
+  /** Key into `backdrops` — themes the panel behind the device frame. */
+  backdrop: string;
   description: string;
   caseStudy: CaseStudy;
 };
@@ -52,7 +64,11 @@ type ProjectItem = {
 const projectsData = projectsDataJson as ProjectItem[];
 
 /** The six labelled panel sections, in render order. */
-const caseSections: { label: string; text: keyof CaseStudy; img: keyof CaseStudy }[] = [
+const caseSections: {
+  label: string;
+  text: keyof CaseStudy;
+  img: keyof CaseStudy;
+}[] = [
   { label: "Problem", text: "problem", img: "problemImg" },
   { label: "Approach", text: "approach", img: "approachImg" },
   { label: "Outcome", text: "outcome", img: "outcomeImg" },
@@ -64,6 +80,37 @@ const caseSections: { label: string; text: keyof CaseStudy; img: keyof CaseStudy
 /** Diagonal hatch used wherever real artwork hasn't been dropped in yet. */
 const hatch = (step: number) =>
   `repeating-linear-gradient(45deg, ${paper}, ${paper} ${step}px, #d8cfb6 ${step}px, #d8cfb6 ${step * 2}px)`;
+
+/**
+ * Per-project backdrop behind the device frame, echoing each app's own visual
+ * identity. Values stay light: the frame is #1E1E1E with a hard black offset
+ * shadow, so a faithfully dark backdrop would swallow both.
+ */
+const backdrops: Record<string, string> = {
+  // This vs That — synthwave dusk: sun disc over a horizon grid.
+  sunset: [
+    "linear-gradient(180deg, transparent 0 63%, rgba(199,86,140,0.16) 63% 64%, transparent 64%)",
+    "repeating-linear-gradient(0deg, rgba(120,60,110,0.07) 0 1px, transparent 1px 15px)",
+    "radial-gradient(circle at 50% 60%, rgba(234,97,55,0.30) 0 105px, transparent 106px)",
+    "linear-gradient(180deg, #EDE0EE 0%, #F4E1DE 58%, #F8EAD8 100%)",
+  ].join(","),
+
+  // Game Gem — arcade treasure: gem facets lit by a gold glow.
+  arcade: [
+    "repeating-linear-gradient(45deg, rgba(88,58,140,0.09) 0 11px, transparent 11px 22px)",
+    "repeating-linear-gradient(-45deg, rgba(88,58,140,0.09) 0 11px, transparent 11px 22px)",
+    "radial-gradient(circle at 50% 44%, rgba(255,168,55,0.26) 0 115px, transparent 116px)",
+    "linear-gradient(180deg, #E9E4F2 0%, #F3EEDC 100%)",
+  ].join(","),
+
+  // Tripr — plotted route across a map grid.
+  map: [
+    "linear-gradient(118deg, transparent 0 46%, rgba(234,97,55,0.28) 46% 47.4%, transparent 47.4%)",
+    "repeating-linear-gradient(0deg, rgba(87,150,193,0.16) 0 1px, transparent 1px 27px)",
+    "repeating-linear-gradient(90deg, rgba(87,150,193,0.16) 0 1px, transparent 1px 27px)",
+    "linear-gradient(160deg, #E4EDF1 0%, #F1EADA 100%)",
+  ].join(","),
+};
 
 const PORTRAIT = { width: 300, height: 650 };
 const LANDSCAPE = { width: 650, height: 300 };
@@ -275,7 +322,9 @@ function CaseStudyPanel({
                 />
               ) : null}
             </Box>
-            <Typography sx={{ fontSize: 13.5, lineHeight: 1.5, color: bodyMuted }}>
+            <Typography
+              sx={{ fontSize: 13.5, lineHeight: 1.5, color: bodyMuted }}
+            >
               {project.caseStudy[section.text]}
             </Typography>
           </Box>
@@ -291,6 +340,7 @@ function ProjectRow({ project }: { project: ProjectItem }) {
 
   return (
     <Box
+      className="reveal"
       sx={{
         backgroundColor: card,
         border,
@@ -299,6 +349,8 @@ function ProjectRow({ project }: { project: ProjectItem }) {
         boxShadow: shadow(8),
         display: "grid",
         gridTemplateColumns: { xs: "1fr", md: "1fr 280px" },
+        transition: "transform .25s ease, box-shadow .25s ease",
+        "&:hover": { transform: "translateY(-4px)", boxShadow: shadow(11) },
       }}
     >
       {/* Left: live device frame, with the case-study panel sliding in over it. */}
@@ -306,7 +358,7 @@ function ProjectRow({ project }: { project: ProjectItem }) {
         sx={{
           position: "relative",
           overflow: "hidden",
-          backgroundColor: paperShade,
+          background: backdrops[project.backdrop] ?? paperShade,
           borderBottom: { xs: border, md: "none" },
           borderRight: { xs: "none", md: border },
           display: "flex",
@@ -333,9 +385,21 @@ function ProjectRow({ project }: { project: ProjectItem }) {
             px: "14px",
             py: "6px",
             "&:hover": { backgroundColor: ink, color: paper },
+            "&:hover .rotate-glyph": { transform: "rotate(180deg)" },
           }}
         >
-          ↻ View {landscape ? "Portrait" : "Landscape"}
+          <Box
+            component="span"
+            className="rotate-glyph"
+            sx={{
+              display: "inline-block",
+              mr: "6px",
+              transition: "transform .35s ease",
+            }}
+          >
+            ↻
+          </Box>
+          View {landscape ? "Portrait" : "Landscape"}
         </Button>
 
         <CaseStudyPanel
@@ -430,19 +494,66 @@ function ProjectRow({ project }: { project: ProjectItem }) {
   );
 }
 
+const shapes: Shape[] = [
+  {
+    kind: "circle",
+    size: 170,
+    color: blue,
+    opacity: 0.16,
+    drift: "driftD",
+    duration: 30,
+    top: "4%",
+    left: "-55px",
+  },
+  {
+    kind: "square",
+    size: 120,
+    color: yellow,
+    opacity: 0.17,
+    drift: "driftA",
+    duration: 27,
+    delay: -11,
+    top: "38%",
+    right: "-45px",
+  },
+  {
+    kind: "ring",
+    size: 190,
+    color: orange,
+    opacity: 0.2,
+    drift: "driftB",
+    duration: 35,
+    delay: -19,
+    bottom: "6%",
+    left: "8%",
+  },
+];
+
 export default function ProjectsCard() {
   return (
     <Box
       component="section"
       id="work"
-      sx={{ maxWidth, mx: "auto", px: gutter, pt: "80px", pb: "96px" }}
+      sx={{
+        position: "relative",
+        mx: "auto",
+        px: gutter,
+        pt: "80px",
+        pb: "96px",
+        display: "flex",
+        justifyContent: "center",
+      }}
     >
-      <SectionHeader number="03" title="Selected Work" />
+      <SectionShapes shapes={shapes} />
 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "32px" }}>
-        {projectsData.map((project) => (
-          <ProjectRow key={project.title} project={project} />
-        ))}
+      <Box sx={{ position: "relative", zIndex: 1, maxWidth, width: "stretch" }}>
+        <SectionHeader number="03" title="Selected Work" />
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+          {projectsData.map((project) => (
+            <ProjectRow key={project.title} project={project} />
+          ))}
+        </Box>
       </Box>
     </Box>
   );

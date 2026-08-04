@@ -6,6 +6,7 @@
     "tags": ["MongoDB", "Next.js", "Cloudinary", "Auth0"],
     "accent": "#5796C1",
     "frame": "live",
+    "backdrop": "sunset",
     "description": "A head-to-head voting app where users compare two items and see how everyone else voted.",
     "caseStudy": {
       "problem": "People debate preferences endlessly with no easy way to settle it or see how others voted.",
@@ -29,6 +30,7 @@
     "tags": ["OpenAI", "Lambda", "IGDB API", "Next.js"],
     "accent": "#EA6137",
     "frame": "live",
+    "backdrop": "arcade",
     "description": "A discovery tool that surfaces new video games from a plain-language description of what you feel like playing.",
     "caseStudy": {
       "problem": "Game catalogs are searchable by genre and tag, but not by the fuzzy way people actually describe what they want to play next.",
@@ -52,6 +54,7 @@
     "tags": ["Vue", ".NET", "Mapbox"],
     "accent": "#FFA837",
     "frame": "placeholder",
+    "backdrop": "map",
     "description": "A trip planner that turns a list of stops into a mapped, bookable itinerary.",
     "caseStudy": {
       "problem": "Planning a multi-stop trip means juggling a map in one tab, booking sites in another, and a notes app holding it together.",

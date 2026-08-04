@@ -1,32 +1,32 @@
 [
   {
     "title": "Front-End Development",
-    "experience": "8+ years",
-    "description": "Crafting fast, responsive, and accessible interfaces using HTML, CSS, TypeScript, and modern frameworks like React, Vue, and Angular. Focused on performance, usability, and cross‑browser reliability."
+    "experience": "6+ years",
+    "description": "Crafting fast, responsive, and accessible interfaces with TypeScript, React, and Next.js, plus Vue and Angular. Focused on performance, usability, and cross-browser reliability."
   },
   {
     "title": "Back-End Development",
     "experience": "5+ years",
-    "description": "Building scalable APIs and server-side systems with Node.js, Python, and .NET. Experienced in Express, Next.js, and .NET Core, with strong skills in database design, optimization, and cloud‑based deployments."
+    "description": "Building scalable APIs and server-side systems with Node.js, Python, and .NET. Engineering REST and GraphQL integrations across distributed services, with PostgreSQL and MongoDB modeling, SQL optimization, and caching under load."
   },
   {
-    "title": "UI/UX Design",
-    "experience": "10+ years",
-    "description": "Designing intuitive, user‑centered experiences using Figma and Adobe Creative Suite. Skilled in research, wireframing, prototyping, and usability testing to deliver clean, thoughtful interfaces."
+    "title": "Cloud & DevOps",
+    "experience": "5+ years",
+    "description": "Designing AWS infrastructure for distributed workloads, background processing, and scalable API services. Experienced with Terraform, Docker, CI/CD pipelines, and production monitoring."
   },
   {
     "title": "Software Architecture",
     "experience": "3+ years",
-    "description": "Architecting maintainable, scalable systems using proven patterns and design principles. Experienced in system modeling, evaluating trade‑offs, and guiding technical direction across teams."
+    "description": "Architecting maintainable, scalable systems and owning them end-to-end — performance, reliability, observability, and long-term maintainability. Comfortable evaluating trade-offs and guiding technical direction across teams."
   },
   {
-    "title": "Third-Party Integrations",
-    "experience": "3+ years",
-    "description": "Implementing reliable connections between platforms using REST, GraphQL, and modern auth flows. Skilled in handling rate limits, error recovery, and ensuring consistent, secure data exchange."
+    "title": "UI/UX Design",
+    "experience": "6+ years",
+    "description": "Designing intuitive, user-centered experiences using Figma and Adobe Creative Suite. Skilled in research, wireframing, prototyping, and usability testing to deliver clean, thoughtful interfaces."
   },
   {
-    "title": "AI Orchestration",
+    "title": "AI-Accelerated Development",
     "experience": "1+ years",
-    "description": "Building AI‑powered workflows and pipelines using tools like Claude, Copilot, and other LLM platforms. Focused on data prep, model evaluation, and deploying intelligent features into production systems."
+    "description": "Shipping with Claude Code, Copilot, and Cursor as part of the daily workflow, plus custom LLM agents and MCP integrations to speed delivery, raise test coverage, and automate documentation."
   }
 ]

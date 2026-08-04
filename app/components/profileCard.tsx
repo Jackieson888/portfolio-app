@@ -88,6 +88,23 @@ export default function ProfileCard() {
           borderBottom: `100px solid ${yellow}`,
           opacity: 0.15,
           zIndex: 0,
+          animation: "driftC 30s ease-in-out infinite",
+        }}
+      />
+      <Box
+        aria-hidden
+        sx={{
+          position: "absolute",
+          top: "45%",
+          left: "-40px",
+          width: 130,
+          height: 130,
+          borderRadius: "50%",
+          border: `3px solid ${orange}`,
+          opacity: 0.16,
+          zIndex: 0,
+          animation: "driftB 27s ease-in-out infinite",
+          animationDelay: "-9s",
         }}
       />
 
@@ -135,9 +152,20 @@ export default function ProfileCard() {
               fontSize: 20,
               backgroundColor: role.color,
               transition: "background-color 0.4s ease",
+              overflow: "hidden",
             }}
           >
-            {role.title}
+            {/* Keyed so each role change replays the entrance. */}
+            <Box
+              key={roleIndex}
+              component="span"
+              sx={{
+                display: "inline-block",
+                animation: "roleIn .45s ease both",
+              }}
+            >
+              {role.title}
+            </Box>
           </Box>
         </Box>
 
@@ -151,14 +179,17 @@ export default function ProfileCard() {
             mb: "32px",
           }}
         >
-          Full-stack developer with 6+ years of experience across front-end,
-          back-end, cloud, and AI-driven application development. Proficient in
-          TypeScript, Node.js, REST APIs, SQL/NoSQL, and AWS, with proven
-          strengths in UI/UX, architecture, integrations, and intelligent
-          automation.
+          Full-stack software engineer with 6+ years building, deploying, and
+          scaling production web applications. Strong in React/Next.js,
+          distributed API design, and AWS cloud architecture — owning systems
+          end-to-end across performance, reliability, observability, and
+          long-term maintainability. Daily practitioner of AI coding agents to
+          accelerate delivery.
         </Typography>
 
-        <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap", mb: "44px" }}>
+        <Box
+          sx={{ display: "flex", gap: "16px", flexWrap: "wrap", mb: "44px" }}
+        >
           <MuiLink
             href="#contact"
             underline="none"
@@ -202,6 +233,26 @@ export default function ProfileCard() {
           >
             View My Work
           </MuiLink>
+          <MuiLink
+            href="/jackson-schacher-resume.pdf"
+            target="_blank"
+            rel="noopener"
+            underline="none"
+            sx={{
+              px: "28px",
+              py: "14px",
+              backgroundColor: "transparent",
+              color: ink,
+              border,
+              borderRadius: "8px",
+              fontWeight: 700,
+              fontSize: 16,
+              transition: "background-color .2s ease, color .2s ease",
+              "&:hover": { backgroundColor: ink, color: paper },
+            }}
+          >
+            Resume
+          </MuiLink>
         </Box>
 
         <Box sx={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
@@ -215,6 +266,11 @@ export default function ProfileCard() {
                 px: "20px",
                 py: "14px",
                 minWidth: 120,
+                transition: "transform .2s ease, box-shadow .2s ease",
+                "&:hover": {
+                  transform: "translateY(-4px)",
+                  boxShadow: shadow(5),
+                },
               }}
             >
               <Box
@@ -285,7 +341,6 @@ export default function ProfileCard() {
             sx={{
               position: "relative",
               zIndex: 1,
-              border,
               borderRadius: "20px",
               overflow: "hidden",
               boxShadow: shadow(10),

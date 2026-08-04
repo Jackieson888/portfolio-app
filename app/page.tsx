@@ -8,7 +8,7 @@ import ContactCard from "./components/contactCard";
 
 export default function Home() {
   return (
-    <Box component="main">
+    <Box component="main" id="main">
       <ProfileCard />
       <FeaturesCard />
       <SkillsCard />

@@ -19,6 +19,7 @@ export default function SectionHeader({
 }: Props) {
   return (
     <Box
+      className="reveal"
       sx={{
         display: "flex",
         alignItems: "baseline",
@@ -43,6 +44,7 @@ export default function SectionHeader({
         {title}
       </Typography>
       <Box
+        className="rule-grow"
         sx={{
           flex: 1,
           height: "3px",

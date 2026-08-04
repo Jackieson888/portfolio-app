@@ -10,6 +10,11 @@
     "category": "Languages"
   },
   {
+    "title": "Python",
+    "path": "language-python.svg",
+    "category": "Languages"
+  },
+  {
     "title": "C#",
     "path": "language-csharp.svg",
     "category": "Languages"
@@ -35,13 +40,8 @@
     "category": "Frameworks & Libraries"
   },
   {
-    "title": "Angular",
-    "path": "angular.svg",
-    "category": "Frameworks & Libraries"
-  },
-  {
-    "title": "Vue",
-    "path": "vuejs.svg",
+    "title": "Next.js",
+    "path": "",
     "category": "Frameworks & Libraries"
   },
   {
@@ -50,18 +50,28 @@
     "category": "Frameworks & Libraries"
   },
   {
+    "title": "Vue",
+    "path": "vuejs.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
+    "title": "Angular",
+    "path": "angular.svg",
+    "category": "Frameworks & Libraries"
+  },
+  {
     "title": ".NET",
     "path": "dot-net.svg",
     "category": "Frameworks & Libraries"
   },
   {
-    "title": "Sass",
-    "path": "sass.svg",
+    "title": "Tailwind",
+    "path": "tailwind.svg",
     "category": "Frameworks & Libraries"
   },
   {
-    "title": "Tailwind",
-    "path": "tailwind.svg",
+    "title": "Sass",
+    "path": "sass.svg",
     "category": "Frameworks & Libraries"
   },
   {
@@ -80,43 +90,103 @@
     "category": "Frameworks & Libraries"
   },
   {
-    "title": "AWS Services",
+    "title": "REST",
+    "path": "api.svg",
+    "category": "Data & APIs"
+  },
+  {
+    "title": "GraphQL",
+    "path": "graphql.svg",
+    "category": "Data & APIs"
+  },
+  {
+    "title": "PostgreSQL",
+    "path": "database.svg",
+    "category": "Data & APIs"
+  },
+  {
+    "title": "MongoDB",
+    "path": "leaf.svg",
+    "category": "Data & APIs"
+  },
+  {
+    "title": "SQL Optimization",
+    "path": "database-search.svg",
+    "category": "Data & APIs"
+  },
+  {
+    "title": "AWS",
     "path": "aws.svg",
-    "category": "Cloud & Tools"
+    "category": "Cloud & DevOps"
+  },
+  {
+    "title": "Terraform",
+    "path": "terraform.svg",
+    "category": "Cloud & DevOps"
   },
   {
     "title": "Docker",
     "path": "docker.svg",
-    "category": "Cloud & Tools"
+    "category": "Cloud & DevOps"
+  },
+  {
+    "title": "CI/CD",
+    "path": "source-branch.svg",
+    "category": "Cloud & DevOps"
+  },
+  {
+    "title": "Observability",
+    "path": "chart-line.svg",
+    "category": "Cloud & DevOps"
   },
   {
     "title": "Git",
     "path": "git.svg",
-    "category": "Cloud & Tools"
-  },
-  {
-    "title": "RESTful API",
-    "path": "api.svg",
-    "category": "Cloud & Tools"
+    "category": "Cloud & DevOps"
   },
   {
     "title": "Mapbox",
     "path": "mapbox.svg",
-    "category": "Cloud & Tools"
+    "category": "Cloud & DevOps"
   },
   {
     "title": "Atlassian",
     "path": "atlassian.svg",
-    "category": "Cloud & Tools"
+    "category": "Cloud & DevOps"
   },
   {
     "title": "Jira",
     "path": "jira.svg",
-    "category": "Cloud & Tools"
+    "category": "Cloud & DevOps"
   },
   {
     "title": "VS Code",
     "path": "microsoft-visual-studio-code.svg",
-    "category": "Cloud & Tools"
+    "category": "Cloud & DevOps"
+  },
+  {
+    "title": "Claude Code",
+    "path": "robot.svg",
+    "category": "AI Development"
+  },
+  {
+    "title": "GitHub Copilot",
+    "path": "robot.svg",
+    "category": "AI Development"
+  },
+  {
+    "title": "Cursor",
+    "path": "robot.svg",
+    "category": "AI Development"
+  },
+  {
+    "title": "Custom AI Agents",
+    "path": "robot.svg",
+    "category": "AI Development"
+  },
+  {
+    "title": "MCP",
+    "path": "api.svg",
+    "category": "AI Development"
   }
 ]

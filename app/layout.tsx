@@ -9,10 +9,41 @@ import theme from "@/src/theme";
 import { roboto } from "@/src/fonts";
 import { Navbar } from "./components/nav";
 
+const description =
+  "Full-stack software engineer with 6+ years building, deploying, and scaling production web applications. React/Next.js, distributed API design, and AWS cloud architecture.";
+
 export const metadata: Metadata = {
-  title: "Jackson Schacher — Full-Stack Engineer, Web Developer, UI/UX Designer",
-  description:
-    "Full-stack developer with 6+ years of experience across front-end, back-end, cloud, and AI-driven application development.",
+  metadataBase: new URL("https://jackson-schacher.com"),
+  title: "Jackson Schacher — Full-Stack Software Engineer",
+  description,
+  keywords: [
+    "Full-Stack Software Engineer",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+    "Python",
+    "AWS",
+    "GraphQL",
+    "PostgreSQL",
+    "UI/UX Design",
+  ],
+  authors: [{ name: "Jackson Schacher" }],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "profile",
+    title: "Jackson Schacher — Full-Stack Software Engineer",
+    description,
+    url: "/",
+    siteName: "Jackson Schacher",
+    images: [{ url: "/profile-pic.png", width: 500, height: 500, alt: "Jackson Schacher" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Jackson Schacher — Full-Stack Software Engineer",
+    description,
+    images: ["/profile-pic.png"],
+  },
 };
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -23,6 +54,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <a href="#main" className="skip-link">
+              Skip to content
+            </a>
             <Navbar />
             {props.children}
           </ThemeProvider>
