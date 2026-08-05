@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Box,
-  Button,
-  Chip,
-  Link as MuiLink,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Chip, Link as MuiLink, Typography } from "@mui/material";
 import Image from "next/image";
 import projectsDataJson from "../data/projectsData.json";
 import SectionHeader from "./sectionHeader";
@@ -97,8 +91,8 @@ const backdrops: Record<string, string> = {
   ].join(","),
 };
 
-const PORTRAIT = { width: 300, height: 650 };
-const LANDSCAPE = { width: 650, height: 300 };
+const PORTRAIT = { width: 440, height: 956 };
+const LANDSCAPE = { width: 956, height: 440 };
 
 function DeviceFrame({
   project,
@@ -250,8 +244,12 @@ function ProjectRow({ project }: { project: ProjectItem }) {
         overflow: "hidden",
         boxShadow: shadow(8),
         display: "flex",
+        flexDirection: "column",
         transition: "transform .25s ease, box-shadow .25s ease",
         "&:hover": { transform: "translateY(-4px)", boxShadow: shadow(11) },
+        "@media (min-width: 1024px)": {
+          flexDirection: "row",
+        },
       }}
     >
       {/* Left: live device frame. */}
@@ -260,8 +258,8 @@ function ProjectRow({ project }: { project: ProjectItem }) {
           position: "relative",
           overflow: "hidden",
           background: backdrops[project.backdrop] ?? paperShade,
-          borderBottom: { xs: border, md: "none" },
-          borderRight: { xs: "none", md: border },
+          borderBottom: border,
+          borderRight: "none",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -269,7 +267,12 @@ function ProjectRow({ project }: { project: ProjectItem }) {
           gap: "16px",
           p: "28px",
           minHeight: 320,
-          width: { xs: "100%", md: 700 },
+          width: "100%",
+          "@media (min-width: 1024px)": {
+            borderBottom: "none",
+            borderRight: border,
+            width: 700,
+          },
         }}
       >
         <DeviceFrame project={project} landscape={landscape} />
