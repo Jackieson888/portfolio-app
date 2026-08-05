@@ -7,20 +7,10 @@
     "accent": "#5796C1",
     "frame": "live",
     "backdrop": "sunset",
-    "description": "A head-to-head voting app where users compare two items and see how everyone else voted.",
-    "caseStudy": {
-      "problem": "People debate preferences endlessly with no easy way to settle it or see how others voted.",
-      "problemImg": "",
-      "approach": "Wireframed a swipe-first voting flow, then built a real-time leaderboard with cached vote aggregation.",
-      "approachImg": "",
-      "outcome": "Shipped an authenticated, mobile-friendly voting app with social sharing and image hosting via Cloudinary.",
-      "outcomeImg": "",
-      "design": "Built a bold, high-contrast matchup screen so the two options carry all the visual weight. Type and color do the work of the interface — the vote itself is the only affordance on screen.",
-      "designImg": "",
-      "wireframing": "Started with paper sketches of the swipe gesture, then moved to low-fidelity frames to test how quickly a user could get from landing to first vote. Cut the onboarding step entirely once testing showed it stalled people.",
-      "wireframingImg": "",
-      "assets": "Matchup imagery is uploaded through Cloudinary with on-the-fly transforms, so a single source image serves every breakpoint. The logo mark and result-share cards were built in Figma and exported as SVG.",
-      "assetsImg": ""
+    "info": {
+      "description": "A head-to-head voting app where users compare two items and see how everyone else voted.",
+      "process": "The app runs on a split runtime: Amplify hosts the Next.js frontend and API routes, while a standalone Node service on EC2 handles only the WebSocket layer. That service keeps active rooms in memory, persists snapshots to MongoDB so players can reconnect and rehydrate state after a drop, and broadcasts vote updates to everyone in a room as they happen.",
+      "outcome": "Separating the socket runtime from the app host keeps the EC2 side lightweight, no Next.js build or dependency surface required, while Amplify handles the deploys it's actually built for. Rooms expire automatically after 30 minutes and idle in-memory sessions get cleaned up shortly after everyone disconnects, so the service stays lean without manual upkeep."
     }
   },
   {
@@ -31,20 +21,10 @@
     "accent": "#EA6137",
     "frame": "live",
     "backdrop": "arcade",
-    "description": "A discovery tool that surfaces new video games from a plain-language description of what you feel like playing.",
-    "caseStudy": {
-      "problem": "Game catalogs are searchable by genre and tag, but not by the fuzzy way people actually describe what they want to play next.",
-      "problemImg": "",
-      "approach": "Put an LLM in front of the IGDB catalog: free-text intent is turned into structured query parameters, then results are re-ranked and summarized. Inference runs on Lambda so cost scales with real usage.",
-      "approachImg": "",
-      "outcome": "Shipped a natural-language search that returns a short, explained shortlist instead of an unranked result grid — and stays responsive by caching the expensive IGDB lookups.",
-      "outcomeImg": "",
-      "design": "Leaned on cover art as the primary visual, with a restrained shell around it so the artwork carries the page. Results are cards, not rows, because the box art is the fastest signal a player reads.",
-      "designImg": "",
-      "wireframing": "Mapped the flow from a single search field to a result set to a detail view, deliberately keeping it to three screens. Early frames tested whether users trusted an AI-written recommendation blurb — they did, provided the source data stayed visible alongside it.",
-      "wireframingImg": "",
-      "assets": "Cover art and screenshots come straight from the IGDB API rather than being hosted locally. Iconography and empty-state illustrations were drawn in Figma to match the app's rounded, arcade-adjacent tone.",
-      "assetsImg": ""
+    "info": {
+      "description": "A discovery tool that surfaces new video games from a plain-language description of what you feel like playing.",
+      "process": "A user's plain-language mood or preference gets sent to an AWS Lambda function, which queries the IGDB API for candidate games and passes that data to an LLM to reason about which titles actually fit what was asked for.",
+      "outcome": "The result is a short list of game suggestions, each paired with a plain explanation of why it matches, turning a vague \"something like X but more chill\" into concrete picks without manually filtering storefronts or wikis."
     }
   },
   {
@@ -55,20 +35,10 @@
     "accent": "#FFA837",
     "frame": "placeholder",
     "backdrop": "map",
-    "description": "A trip planner that turns a list of stops into a mapped, bookable itinerary.",
-    "caseStudy": {
-      "problem": "Planning a multi-stop trip means juggling a map in one tab, booking sites in another, and a notes app holding it together.",
-      "problemImg": "",
-      "approach": "Built the itinerary and the map as one view — editing the list reorders the route, and dragging the route reorders the list. A .NET API keeps the itinerary authoritative so both surfaces stay in sync.",
-      "approachImg": "",
-      "outcome": "Shipped a planner where the route, the stops, and the bookings live in a single view, with Mapbox handling geocoding and directions.",
-      "outcomeImg": "",
-      "design": "The map is the canvas and the itinerary is a panel over it, so the trip always reads geographically first. Stop markers are numbered and color-coded by day to make a long route legible at a glance.",
-      "designImg": "",
-      "wireframing": "Wireframed the split between map and list at several ratios before settling on an overlay panel that collapses — on a phone, the map is what people want to see, and the list is what they want to edit.",
-      "wireframingImg": "",
-      "assets": "Map styling is a custom Mapbox Studio theme tuned to the site's palette rather than a stock basemap. Marker and category icons were built as a small SVG set so they stay crisp at every zoom level.",
-      "assetsImg": ""
+    "info": {
+      "description": "A trip planner that turns a list of stops into a mapped, bookable itinerary.",
+      "process": "The backend is an Express.js API with a modular controller/service/model structure: Mongoose schemas cover trips, travelers, supplies, values, and route details, Auth0 handles authentication on protected routes, and Socket.IO powers real-time updates between travelers on the same trip.",
+      "outcome": "The API exposes full CRUD across trips, travelers, supplies, and route waypoints behind Auth0-gated endpoints, with a real-time layer so changes one traveler makes show up live for the rest of the group."
     }
   }
 ]

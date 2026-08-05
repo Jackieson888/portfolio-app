@@ -5,11 +5,9 @@ import {
   Box,
   Button,
   Chip,
-  IconButton,
   Link as MuiLink,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import projectsDataJson from "../data/projectsData.json";
 import SectionHeader from "./sectionHeader";
@@ -29,22 +27,14 @@ import {
   paper,
   paperShade,
   shadow,
+  solidButton,
   yellow,
 } from "@/src/tokens";
 
-type CaseStudy = {
-  problem: string;
-  problemImg: string;
-  approach: string;
-  approachImg: string;
+type AppInfo = {
+  description: string;
+  process: string;
   outcome: string;
-  outcomeImg: string;
-  design: string;
-  designImg: string;
-  wireframing: string;
-  wireframingImg: string;
-  assets: string;
-  assetsImg: string;
 };
 
 type ProjectItem = {
@@ -57,24 +47,19 @@ type ProjectItem = {
   frame: "live" | "placeholder";
   /** Key into `backdrops` — themes the panel behind the device frame. */
   backdrop: string;
-  description: string;
-  caseStudy: CaseStudy;
+  info: AppInfo;
 };
 
 const projectsData = projectsDataJson as ProjectItem[];
 
-/** The six labelled panel sections, in render order. */
-const caseSections: {
+/** The labelled panel sections, in render order. */
+const infoSections: {
   label: string;
-  text: keyof CaseStudy;
-  img: keyof CaseStudy;
+  text: keyof AppInfo;
 }[] = [
-  { label: "Problem", text: "problem", img: "problemImg" },
-  { label: "Approach", text: "approach", img: "approachImg" },
-  { label: "Outcome", text: "outcome", img: "outcomeImg" },
-  { label: "Design", text: "design", img: "designImg" },
-  { label: "Wireframing", text: "wireframing", img: "wireframingImg" },
-  { label: "Asset Creation", text: "assets", img: "assetsImg" },
+  { label: "Description", text: "description" },
+  { label: "Process", text: "process" },
+  { label: "Outcome", text: "outcome" },
 ];
 
 /** Diagonal hatch used wherever real artwork hasn't been dropped in yet. */
@@ -217,126 +202,43 @@ function DeviceFrame({
   );
 }
 
-function CaseStudyPanel({
-  project,
-  open,
-  onClose,
-}: {
-  project: ProjectItem;
-  open: boolean;
-  onClose: () => void;
-}) {
+function AppInfoPanel({ project }: { project: ProjectItem }) {
   return (
     <Box
-      inert={!open}
       sx={{
-        position: "absolute",
-        inset: 0,
-        zIndex: 3,
         backgroundColor: card,
         p: "22px",
-        overflowY: "auto",
-        transform: open ? "translateX(0)" : "translateX(105%)",
-        transition: "transform .4s ease",
-        // Keep line length and image slots readable when the cell is wide.
         "& > *": { maxWidth: 620, mx: "auto" },
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: "12px",
-          mb: "18px",
-        }}
-      >
-        <Box>
+      {infoSections.map((section, index) => (
+        <Box key={section.label} sx={{ mb: "20px" }}>
           <Box
             sx={{
               fontFamily: mono,
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: 700,
               letterSpacing: "1px",
-              color: project.accent,
-              mb: "4px",
+              textTransform: "uppercase",
+              color: accentAt(index),
+              mb: "6px",
             }}
           >
-            CASE STUDY
+            {section.label}
           </Box>
-          <Typography variant="h3" sx={{ fontSize: 24, m: 0 }}>
-            {project.title}
+          <Typography
+            sx={{ fontSize: 13.5, lineHeight: 1.5, color: bodyMuted }}
+          >
+            {project.info[section.text]}
           </Typography>
         </Box>
-        <IconButton
-          onClick={onClose}
-          aria-label={`Close ${project.title} case study`}
-          sx={{
-            border: borderThin,
-            borderRadius: "8px",
-            color: ink,
-            p: "4px",
-            flexShrink: 0,
-            "&:hover": { backgroundColor: ink, color: paper },
-          }}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </Box>
-
-      {caseSections.map((section, index) => {
-        const img = project.caseStudy[section.img];
-        return (
-          <Box key={section.label} sx={{ mb: "20px" }}>
-            <Box
-              sx={{
-                fontFamily: mono,
-                fontSize: 10,
-                fontWeight: 700,
-                letterSpacing: "1px",
-                textTransform: "uppercase",
-                color: accentAt(index),
-                mb: "6px",
-              }}
-            >
-              {section.label}
-            </Box>
-            <Box
-              sx={{
-                position: "relative",
-                height: 100,
-                borderRadius: "8px",
-                overflow: "hidden",
-                border: borderThin,
-                mb: "8px",
-                background: img ? "none" : hatch(10),
-              }}
-            >
-              {img ? (
-                <Image
-                  src={img}
-                  alt={`${project.title} — ${section.label}`}
-                  fill
-                  sizes="280px"
-                  style={{ objectFit: "cover" }}
-                />
-              ) : null}
-            </Box>
-            <Typography
-              sx={{ fontSize: 13.5, lineHeight: 1.5, color: bodyMuted }}
-            >
-              {project.caseStudy[section.text]}
-            </Typography>
-          </Box>
-        );
-      })}
+      ))}
     </Box>
   );
 }
 
 function ProjectRow({ project }: { project: ProjectItem }) {
   const [landscape, setLandscape] = useState(false);
-  const [caseOpen, setCaseOpen] = useState(false);
 
   return (
     <Box
@@ -347,13 +249,12 @@ function ProjectRow({ project }: { project: ProjectItem }) {
         borderRadius: "12px",
         overflow: "hidden",
         boxShadow: shadow(8),
-        display: "grid",
-        gridTemplateColumns: { xs: "1fr", md: "1fr 280px" },
+        display: "flex",
         transition: "transform .25s ease, box-shadow .25s ease",
         "&:hover": { transform: "translateY(-4px)", boxShadow: shadow(11) },
       }}
     >
-      {/* Left: live device frame, with the case-study panel sliding in over it. */}
+      {/* Left: live device frame. */}
       <Box
         sx={{
           position: "relative",
@@ -368,6 +269,7 @@ function ProjectRow({ project }: { project: ProjectItem }) {
           gap: "16px",
           p: "28px",
           minHeight: 320,
+          width: { xs: "100%", md: 700 },
         }}
       >
         <DeviceFrame project={project} landscape={landscape} />
@@ -401,12 +303,6 @@ function ProjectRow({ project }: { project: ProjectItem }) {
           </Box>
           View {landscape ? "Portrait" : "Landscape"}
         </Button>
-
-        <CaseStudyPanel
-          project={project}
-          open={caseOpen}
-          onClose={() => setCaseOpen(false)}
-        />
       </Box>
 
       {/* Right: project identity and actions. */}
@@ -435,6 +331,20 @@ function ProjectRow({ project }: { project: ProjectItem }) {
           <Typography variant="h3" sx={{ fontSize: 24, m: 0 }}>
             {project.title}
           </Typography>
+          <MuiLink
+            href={project.link}
+            target="_blank"
+            rel="noopener"
+            underline="none"
+            sx={{
+              ...solidButton(orange),
+              fontSize: 14,
+              px: "18px",
+              py: "9px",
+            }}
+          >
+            Live Project ↗
+          </MuiLink>
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
@@ -442,11 +352,6 @@ function ProjectRow({ project }: { project: ProjectItem }) {
             <Chip key={tag} label={tag} size="small" />
           ))}
         </Box>
-
-        <Typography sx={{ fontSize: 14.5, lineHeight: 1.6, color: bodyMuted }}>
-          {project.description}
-        </Typography>
-
         <Box
           sx={{
             display: "flex",
@@ -456,38 +361,7 @@ function ProjectRow({ project }: { project: ProjectItem }) {
             pt: "8px",
           }}
         >
-          <Button
-            onClick={() => setCaseOpen(true)}
-            aria-expanded={caseOpen}
-            sx={{
-              fontWeight: 700,
-              fontSize: 14,
-              color: ink,
-              backgroundColor: orange,
-              border,
-              borderRadius: "8px",
-              px: "18px",
-              py: "9px",
-              "&:hover": { backgroundColor: ink, color: paper },
-            }}
-          >
-            View Case Study →
-          </Button>
-          <MuiLink
-            href={project.link}
-            target="_blank"
-            rel="noopener"
-            underline="none"
-            sx={{
-              fontWeight: 700,
-              fontSize: 14,
-              color: project.accent,
-              transition: "color .2s ease",
-              "&:hover": { color: orange },
-            }}
-          >
-            Live Project ↗
-          </MuiLink>
+          <AppInfoPanel project={project} />
         </Box>
       </Box>
     </Box>
