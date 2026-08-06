@@ -1,44 +1,50 @@
 [
   {
+    "title": "ParaLayer",
+    "logo": "",
+    "link": "http://54.161.69.233/",
+    "repo": "https://github.com/Jackieson888/parametric-insurance-mvp",
+    "tags": ["Docker", "Postgres", "Redis", "NOAA API"],
+    "accent": "#FFA837",
+    "frame": "live",
+    "backdrop": "map",
+    "info": {
+      "description": "A calibration tool for parametric weather insurance that backtests trigger thresholds against 20 years of NOAA data and scores basis risk before a policy is ever sold.",
+      "process": "An organization defines a trigger candidate, a peril, station, threshold, operator, and window, which queues a backtest job on Redis for a worker to pick up. The engine slices two decades of NOAA GHCN-Daily observations into consecutive, non-overlapping windows the length of the policy term, computes the peril's aggregate for each one, and checks it against NOAA's Storm Events Database as an independent proxy for real documented loss. A logistic regression fit on the same windows reports a held-out AUC alongside the result, so a low-signal station reads as \"the proxy can't judge this threshold\" rather than as a false failure.",
+      "outcome": "Each run returns a false trigger rate and a missed loss rate, one per side of the contract, averaged into a single basis-risk score, plus a threshold sweep suggesting where to write the trigger for a target return period. Both NOAA datasets are cached in Postgres so re-ingestion only tops up new records, and while the demo console's tenants are fake, every backtest on screen runs on the same real weather and loss data a user's own candidate would.",
+      "challenge": "A product that's never been sold has no claims history to validate against, so there's nothing to measure basis risk against. Using NOAA's Storm Events Database as a loss proxy solves that, but a proxy can be wrong, so every backtest also fits a held-out logistic regression to flag when the local data is too thin to trust the basis-risk number at all."
+    }
+  },
+  {
     "title": "This vs That",
     "logo": "/tvt-game-logo.png",
     "link": "https://tvt-game.app",
+    "repo": "https://github.com/Jackieson888/bracket-app",
     "tags": ["MongoDB", "Next.js", "Cloudinary", "Auth0"],
     "accent": "#5796C1",
     "frame": "live",
     "backdrop": "sunset",
     "info": {
-      "description": "A head-to-head voting app where users compare two items and see how everyone else voted.",
-      "process": "The app runs on a split runtime: Amplify hosts the Next.js frontend and API routes, while a standalone Node service on EC2 handles only the WebSocket layer. That service keeps active rooms in memory, persists snapshots to MongoDB so players can reconnect and rehydrate state after a drop, and broadcasts vote updates to everyone in a room as they happen.",
-      "outcome": "Separating the socket runtime from the app host keeps the EC2 side lightweight, no Next.js build or dependency surface required, while Amplify handles the deploys it's actually built for. Rooms expire automatically after 30 minutes and idle in-memory sessions get cleaned up shortly after everyone disconnects, so the service stays lean without manual upkeep."
+      "description": "A real-time, browser-based party game in the spirit of Jackbox's Bracketeering, where a room of players votes head-to-head on prompts and watches everyone else's picks land live.",
+      "process": "The websocket layer used to live inside the main Next.js runtime, so an EC2 host serving only socket connections still had to carry the full app's build and dependency surface. It's since been split into two runtimes: Amplify hosts the Next.js frontend and API routes, while a standalone Node process on EC2 handles only /ws upgrades, sharing a room-lifecycle module that manages reconnect hydration, TTL-based expiration, and vote broadcast to everyone in the room. PowerShell bootstrap scripts drive the EC2 side end to end, pulling the repo, installing just the realtime-runtime dependency set, wiring up the systemd service, and fronting it with an Nginx reverse proxy with optional Let's Encrypt TLS.",
+      "outcome": "The split keeps the EC2 dependency and build surface down to a handful of realtime-only packages, no Next.js build required, while Amplify keeps owning the app deploys it's actually suited for. Rooms persist snapshots to MongoDB so players can reconnect and rehydrate state after a drop, and both session expiration and idle in-memory cleanup run on their own configurable TTLs, so a play session self-destructs 30 minutes after creation without any manual upkeep.",
+      "challenge": "Websockets need a long-lived process, which doesn't fit a serverless app host, but shipping the whole Next.js app onto EC2 just to serve /ws upgrades wastes the build and dependency surface. Splitting the realtime runtime into its own minimal Node process, fronted by Nginx and backed by MongoDB for reconnect hydration, let each half run on the infrastructure it's actually suited for."
     }
   },
   {
     "title": "Game Gem",
     "logo": "",
     "link": "https://game-gem.com",
+    "repo": "https://github.com/Jackieson888/game-rec-app",
     "tags": ["OpenAI", "Lambda", "IGDB API", "Next.js"],
     "accent": "#EA6137",
     "frame": "live",
     "backdrop": "arcade",
     "info": {
-      "description": "A discovery tool that surfaces new video games from a plain-language description of what you feel like playing.",
-      "process": "A user's plain-language mood or preference gets sent to an AWS Lambda function, which queries the IGDB API for candidate games and passes that data to an LLM to reason about which titles actually fit what was asked for.",
-      "outcome": "The result is a short list of game suggestions, each paired with a plain explanation of why it matches, turning a vague \"something like X but more chill\" into concrete picks without manually filtering storefronts or wikis."
-    }
-  },
-  {
-    "title": "Tripr",
-    "logo": "",
-    "link": "https://tripr.com",
-    "tags": ["Vue", ".NET", "Mapbox"],
-    "accent": "#FFA837",
-    "frame": "placeholder",
-    "backdrop": "map",
-    "info": {
-      "description": "A trip planner that turns a list of stops into a mapped, bookable itinerary.",
-      "process": "The backend is an Express.js API with a modular controller/service/model structure: Mongoose schemas cover trips, travelers, supplies, values, and route details, Auth0 handles authentication on protected routes, and Socket.IO powers real-time updates between travelers on the same trip.",
-      "outcome": "The API exposes full CRUD across trips, travelers, supplies, and route waypoints behind Auth0-gated endpoints, with a real-time layer so changes one traveler makes show up live for the rest of the group."
+      "description": "A discovery tool, wrapped in a retro 8-bit gemstone-mining theme, that turns a plain-language vibe into a short list of IGDB-backed game recommendations you dig up as rated \"gems.\"",
+      "process": "On the Find Gems screen you describe a mood in free text, optionally point it at a game you already liked via IGDB autocomplete, and filter by genre, mode, and keyword tags pulled live from IGDB. Submitting POSTs that payload to a Next.js API route, which forwards it through API Gateway to an AWS Lambda that queries an LLM and returns a handful of recommendations with a natural-language reason for each, while IGDB's own OAuth credentials stay server-side and never reach the browser. Each result comes back as a \"gem\" with its IGDB cover art, summary, and a rarity tier (Common/Rare/Epic/Legendary) derived from its community rating.",
+      "outcome": "The result turns a vague \"something like Hollow Knight but shorter\" into concrete, explained picks instead of requiring you to already know what to search for, combining a real game database for accurate metadata with an LLM for the actual matching. A lightweight gamification layer, XP, prospector levels, visit streaks, and achievements, persists in the browser via localStorage to encourage repeat use without requiring an account, with an Amplify/Cognito backend scaffolded for a future move off local storage.",
+      "challenge": "A vague mood like \"cozy but a little spooky\" isn't something a keyword filter or static tag search can resolve into good picks. Pairing IGDB for accurate, real-time game metadata with an LLM for the actual reasoning splits the problem cleanly: one system supplies ground truth, the other supplies judgment, and the loading screen's elapsed-time progress bar hides the latency of that round trip without ever lying about being done."
     }
   }
 ]

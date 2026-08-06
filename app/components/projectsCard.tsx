@@ -27,6 +27,7 @@ import {
 
 type AppInfo = {
   description: string;
+  challenge: string;
   process: string;
   outcome: string;
 };
@@ -35,6 +36,7 @@ type ProjectItem = {
   title: string;
   logo: string;
   link: string;
+  repo: string;
   tags: string[];
   accent: string;
   /** "live" embeds the real deploy; "placeholder" is for sites that block framing. */
@@ -52,6 +54,7 @@ const infoSections: {
   text: keyof AppInfo;
 }[] = [
   { label: "Description", text: "description" },
+  { label: "Challenge", text: "challenge" },
   { label: "Process", text: "process" },
   { label: "Outcome", text: "outcome" },
 ];
@@ -210,7 +213,7 @@ function AppInfoPanel({ project }: { project: ProjectItem }) {
           <Box
             sx={{
               fontFamily: mono,
-              fontSize: 10,
+              fontSize: 20,
               fontWeight: 700,
               letterSpacing: "1px",
               textTransform: "uppercase",
@@ -220,9 +223,7 @@ function AppInfoPanel({ project }: { project: ProjectItem }) {
           >
             {section.label}
           </Box>
-          <Typography
-            sx={{ fontSize: 13.5, lineHeight: 1.5, color: bodyMuted }}
-          >
+          <Typography sx={{ fontSize: 16, lineHeight: 1.5, color: bodyMuted }}>
             {project.info[section.text]}
           </Typography>
         </Box>
@@ -348,6 +349,28 @@ function ProjectRow({ project }: { project: ProjectItem }) {
           >
             Live Project ↗
           </MuiLink>
+          {project.repo ? (
+            <MuiLink
+              href={project.repo}
+              target="_blank"
+              rel="noopener"
+              underline="none"
+              sx={{
+                fontFamily: mono,
+                fontSize: 13,
+                fontWeight: 700,
+                color: ink,
+                backgroundColor: paper,
+                border: borderThin,
+                borderRadius: "8px",
+                px: "16px",
+                py: "8px",
+                "&:hover": { backgroundColor: ink, color: paper },
+              }}
+            >
+              View Code ↗
+            </MuiLink>
+          ) : null}
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>

@@ -127,7 +127,7 @@ export default function FeaturesCard() {
                     component="span"
                     sx={{
                       fontFamily: mono,
-                      fontSize: 12,
+                      fontSize: 14,
                       backgroundColor: paper,
                       border: borderThin,
                       borderRadius: "6px",
@@ -141,7 +141,7 @@ export default function FeaturesCard() {
                 </Box>
                 <Typography
                   sx={{
-                    fontSize: 14.5,
+                    fontSize: 16,
                     lineHeight: 1.55,
                     color: bodyMuted,
                     m: 0,
