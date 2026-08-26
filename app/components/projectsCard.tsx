@@ -1,10 +1,12 @@
+import type { ReactNode } from "react";
 import { Box, Chip, Link as MuiLink, Typography } from "@mui/material";
 import Image from "next/image";
+import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
 import projectsDataJson from "../data/projectsData.json";
 import SectionHeader from "./sectionHeader";
 import SectionShapes, { type Shape } from "./sectionShapes";
+import { HoverPlayVideo } from "./inViewVideo";
 import {
-  accentAt,
   blue,
   bodyMuted,
   border,
@@ -16,7 +18,6 @@ import {
   mono,
   orange,
   paper,
-  paperShade,
   shadow,
   solidButton,
   yellow,
@@ -29,6 +30,20 @@ type AppInfo = {
   outcome: string;
 };
 
+type MediaSection = "hero" | "description" | "challenge" | "process" | "outcome";
+
+type ProjectMedia = {
+  type: "image" | "video";
+  src: string;
+  /** Required in practice for type: "video" — first-frame JPG for layout-stable loading. */
+  poster?: string;
+  width: number;
+  height: number;
+  /** Short human-readable line, also used as the image alt / video aria-label. */
+  caption: string;
+  section: MediaSection;
+};
+
 type ProjectItem = {
   title: string;
   logo: string;
@@ -36,225 +51,323 @@ type ProjectItem = {
   repo: string;
   tags: string[];
   accent: string;
-  /** Static hero screenshot shown in the browser-chrome frame. */
+  /** Legacy static hero screenshot — hero fallback when no `media` entry has section: "hero". */
   screenshot: string;
   screenshotWidth: number;
   screenshotHeight: number;
-  /** Key into `backdrops` — themes the panel behind the frame. */
   backdrop: string;
   info: AppInfo;
+  /** Optional per-section clips/images. Absent = hero-screenshot + hatch-placeholder render. */
+  media?: ProjectMedia[];
 };
 
 const projectsData = projectsDataJson as ProjectItem[];
 
-/** The labelled panel sections, in render order. */
-const infoSections: {
-  label: string;
-  text: keyof AppInfo;
-}[] = [
-  { label: "Description", text: "description" },
-  { label: "Challenge", text: "challenge" },
-  { label: "Process", text: "process" },
-  { label: "Outcome", text: "outcome" },
-];
+const heroMedia = (project: ProjectItem) =>
+  project.media?.find((m) => m.section === "hero");
+
+const mediaFor = (project: ProjectItem, section: MediaSection) =>
+  project.media?.find((m) => m.section === section);
 
 /** Diagonal hatch used wherever real artwork hasn't been dropped in yet. */
 const hatch = (step: number) =>
   `repeating-linear-gradient(45deg, ${paper}, ${paper} ${step}px, #d8cfb6 ${step}px, #d8cfb6 ${step * 2}px)`;
 
-/**
- * Per-project backdrop behind the device frame, echoing each app's own visual
- * identity. Values stay light: the frame is #1E1E1E with a hard black offset
- * shadow, so a faithfully dark backdrop would swallow both.
- */
-const backdrops: Record<string, string> = {
-  // Salmonid Sim — river current: soft ripple lines under a caustic glow.
-  river: [
-    "repeating-linear-gradient(3deg, rgba(74,140,132,0.10) 0 2px, transparent 2px 18px)",
-    "radial-gradient(circle at 28% 68%, rgba(87,150,193,0.24) 0 130px, transparent 131px)",
-    "linear-gradient(180deg, #DCEAE6 0%, #E8F0E8 55%, #F2EFE0 100%)",
-  ].join(","),
+/** Small mono section label — e.g. CHALLENGE/PROCESS/OUTCOME — tinted per its accent. */
+function RowLabel({ text, color, marker }: { text: string; color: string; marker?: ReactNode }) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: "6px",
+        fontFamily: mono,
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        color,
+        mb: "6px",
+      }}
+    >
+      {marker}
+      {text}
+    </Box>
+  );
+}
 
-  // This vs That — synthwave dusk: sun disc over a horizon grid.
-  sunset: [
-    "linear-gradient(180deg, transparent 0 63%, rgba(199,86,140,0.16) 63% 64%, transparent 64%)",
-    "repeating-linear-gradient(0deg, rgba(120,60,110,0.07) 0 1px, transparent 1px 15px)",
-    "radial-gradient(circle at 50% 60%, rgba(234,97,55,0.30) 0 105px, transparent 106px)",
-    "linear-gradient(180deg, #EDE0EE 0%, #F4E1DE 58%, #F8EAD8 100%)",
-  ].join(","),
+function TriangleMarker() {
+  return (
+    <Box
+      sx={{
+        width: 0,
+        height: 0,
+        borderLeft: "5px solid transparent",
+        borderRight: "5px solid transparent",
+        borderBottom: `9px solid ${yellow}`,
+        flexShrink: 0,
+      }}
+    />
+  );
+}
 
-  // Game Gem — arcade treasure: gem facets lit by a gold glow.
-  arcade: [
-    "repeating-linear-gradient(45deg, rgba(88,58,140,0.09) 0 11px, transparent 11px 22px)",
-    "repeating-linear-gradient(-45deg, rgba(88,58,140,0.09) 0 11px, transparent 11px 22px)",
-    "radial-gradient(circle at 50% 44%, rgba(255,168,55,0.26) 0 115px, transparent 116px)",
-    "linear-gradient(180deg, #E9E4F2 0%, #F3EEDC 100%)",
-  ].join(","),
+function HeroMedia({ project }: { project: ProjectItem }) {
+  const hero = heroMedia(project);
 
-  // Tripr — plotted route across a map grid.
-  map: [
-    "linear-gradient(118deg, transparent 0 46%, rgba(234,97,55,0.28) 46% 47.4%, transparent 47.4%)",
-    "repeating-linear-gradient(0deg, rgba(87,150,193,0.16) 0 1px, transparent 1px 27px)",
-    "repeating-linear-gradient(90deg, rgba(87,150,193,0.16) 0 1px, transparent 1px 27px)",
-    "linear-gradient(160deg, #E4EDF1 0%, #F1EADA 100%)",
-  ].join(","),
-};
+  return (
+    <Box sx={{ position: "relative", width: "100%", height: "clamp(170px, 22vw, 210px)", overflow: "hidden" }}>
+      {hero || project.screenshot ? (
+        hero?.type === "video" ? (
+          <HoverPlayVideo src={hero.src} poster={hero.poster ?? ""} alt={hero.caption} />
+        ) : (
+          <Image
+            src={hero?.src ?? project.screenshot}
+            alt={hero?.caption ?? `${project.title} screenshot`}
+            fill
+            sizes="(min-width: 900px) 50vw, 100vw"
+            style={{ objectFit: "cover" }}
+          />
+        )
+      ) : (
+        <Box sx={{ position: "absolute", inset: 0, background: hatch(12) }} />
+      )}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(0deg, rgba(28,26,23,.75) 0%, transparent 45%)",
+          display: "flex",
+          alignItems: "flex-end",
+          p: "14px",
+          pointerEvents: "none",
+        }}
+      >
+        <Typography variant="h3" sx={{ fontSize: 22, color: "#fff", m: 0 }}>
+          {project.title}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
-/** Browser-chrome dots cycle the brand accents rather than literal red/amber/green. */
-const chromeDots = [orange, yellow, blue];
-
-function BrowserFrame({ project }: { project: ProjectItem }) {
-  const domain = project.link.replace(/^https?:\/\//, "").replace(/\/+$/, "");
+function MetaRow({ project }: { project: ProjectItem }) {
+  const [primaryTag, ...restTags] = project.tags;
 
   return (
     <Box
       sx={{
-        width: "100%",
-        maxWidth: 600,
-        backgroundColor: ink,
-        border,
-        borderRadius: "14px",
-        overflow: "hidden",
-        boxShadow: shadow(6),
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "10px",
+        p: "14px",
+        borderBottom: borderThin,
+      }}
+    >
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+        {primaryTag ? <Chip label={primaryTag} size="small" sx={{ backgroundColor: yellow }} /> : null}
+        {restTags.map((tag) => (
+          <Chip key={tag} label={tag} size="small" />
+        ))}
+      </Box>
+      <Box sx={{ display: "flex", gap: "8px" }}>
+        <MuiLink
+          href={project.link}
+          target="_blank"
+          rel="noopener"
+          underline="none"
+          sx={{ ...solidButton(orange), fontSize: 13, px: "14px", py: "7px" }}
+        >
+          Live Project ↗
+        </MuiLink>
+        {project.repo ? (
+          <MuiLink
+            href={project.repo}
+            target="_blank"
+            rel="noopener"
+            underline="none"
+            sx={{
+              fontFamily: mono,
+              fontSize: 12,
+              fontWeight: 700,
+              color: ink,
+              backgroundColor: paper,
+              border: borderThin,
+              borderRadius: "8px",
+              px: "14px",
+              py: "7px",
+              "&:hover": { backgroundColor: ink, color: paper },
+            }}
+          >
+            View Code ↗
+          </MuiLink>
+        ) : null}
+      </Box>
+    </Box>
+  );
+}
+
+function DescriptionBlock({ project }: { project: ProjectItem }) {
+  return (
+    <Typography
+      sx={{
+        fontSize: 13,
+        lineHeight: 1.6,
+        color: bodyMuted,
+        borderLeft: `3px solid ${blue}`,
+        pl: "12px",
+      }}
+    >
+      {project.info.description}
+    </Typography>
+  );
+}
+
+function ChallengeRow({ project }: { project: ProjectItem }) {
+  const media = mediaFor(project, "challenge");
+
+  return (
+    <Box
+      sx={{
+        border: borderThin,
+        borderRadius: "4px",
+        backgroundColor: card,
+        p: "12px",
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "12px",
+      }}
+    >
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <RowLabel
+          text="Challenge"
+          color={orange}
+          marker={<Box sx={{ width: 8, height: 8, backgroundColor: orange, flexShrink: 0 }} />}
+        />
+        <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>
+          {project.info.challenge}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          position: "relative",
+          width: 78,
+          height: 58,
+          flexShrink: 0,
+          borderRadius: "6px",
+          overflow: "hidden",
+          border: borderThin,
+          boxShadow: shadow(3),
+          transform: "rotate(-2deg)",
+        }}
+      >
+        {media ? (
+          media.type === "video" ? (
+            <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} />
+          ) : (
+            <Image src={media.src} alt={media.caption} fill sizes="78px" style={{ objectFit: "cover" }} />
+          )
+        ) : (
+          <Box sx={{ position: "absolute", inset: 0, background: hatch(6) }} />
+        )}
+      </Box>
+    </Box>
+  );
+}
+
+function ProcessRow({ project }: { project: ProjectItem }) {
+  const media = mediaFor(project, "process");
+
+  return (
+    <Box sx={{ border: borderThin, borderRadius: "4px", backgroundColor: card, overflow: "hidden" }}>
+      <Box sx={{ position: "relative", width: "100%", height: 38 }}>
+        {media ? (
+          media.type === "video" ? (
+            <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} showIndicator={false} />
+          ) : (
+            <Image src={media.src} alt={media.caption} fill sizes="100vw" style={{ objectFit: "cover" }} />
+          )
+        ) : (
+          <Box sx={{ position: "absolute", inset: 0, background: hatch(6) }} />
+        )}
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "10px",
+            transform: "translateY(-50%)",
+            width: 32,
+            height: 32,
+            borderRadius: "50%",
+            backgroundColor: "rgba(255,255,255,0.9)",
+            border: borderThin,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+          }}
+        >
+          <PlayArrowRounded sx={{ color: ink, fontSize: 18 }} />
+        </Box>
+      </Box>
+      <Box sx={{ p: "12px" }}>
+        <RowLabel text="Process" color={blue} />
+        <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>
+          {project.info.process}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+function OutcomeRow({ project }: { project: ProjectItem }) {
+  const media = mediaFor(project, "outcome");
+
+  return (
+    <Box
+      sx={{
+        border: borderThin,
+        borderRadius: "4px",
+        backgroundColor: card,
+        p: "12px",
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: "12px",
-          px: "14px",
-          py: "10px",
-          borderBottom: "1px solid #3a3a36",
+          position: "relative",
+          width: 52,
+          height: 52,
+          flexShrink: 0,
+          borderRadius: "50%",
+          overflow: "hidden",
+          border: borderThin,
         }}
       >
-        <Box sx={{ display: "flex", gap: "6px", flexShrink: 0 }}>
-          {chromeDots.map((c, i) => (
-            <Box
-              key={i}
-              sx={{
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                backgroundColor: c,
-              }}
-            />
-          ))}
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            fontFamily: mono,
-            fontSize: 12,
-            color: "#928f80",
-            backgroundColor: "#141412",
-            border: "1px solid #3a3a36",
-            borderRadius: "6px",
-            px: "10px",
-            py: "4px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {domain}
-        </Box>
+        {media ? (
+          media.type === "video" ? (
+            <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} />
+          ) : (
+            <Image src={media.src} alt={media.caption} fill sizes="52px" style={{ objectFit: "cover" }} />
+          )
+        ) : (
+          <Box sx={{ position: "absolute", inset: 0, background: hatch(4) }} />
+        )}
       </Box>
-
-      {project.screenshot ? (
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            aspectRatio: `${project.screenshotWidth} / ${project.screenshotHeight}`,
-            overflow: "hidden",
-            "& img": { transition: "transform .4s ease" },
-            "&:hover img": { transform: "scale(1.035)" },
-          }}
-        >
-          <Image
-            src={project.screenshot}
-            alt={`${project.title} screenshot`}
-            fill
-            sizes="(min-width: 1024px) 600px, 100vw"
-            style={{ objectFit: "cover", objectPosition: "top" }}
-          />
-        </Box>
-      ) : (
-        <Box
-          sx={{
-            width: "100%",
-            aspectRatio: "16 / 10",
-            background: hatch(12),
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Box
-            sx={{
-              fontFamily: mono,
-              fontSize: 10.5,
-              letterSpacing: "0.5px",
-              textAlign: "center",
-              color: ink,
-              backgroundColor: card,
-              border: borderThin,
-              borderRadius: "6px",
-              px: "8px",
-              py: "5px",
-            }}
-          >
-            SCREENSHOT
-            <br />
-            COMING SOON
-          </Box>
-        </Box>
-      )}
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <RowLabel text="Outcome" color={yellow} marker={<TriangleMarker />} />
+        <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>
+          {project.info.outcome}
+        </Typography>
+      </Box>
     </Box>
   );
 }
 
-function AppInfoPanel({ project }: { project: ProjectItem }) {
-  return (
-    <Box
-      sx={{
-        backgroundColor: card,
-        p: "22px",
-        "& > *": { maxWidth: 620, mx: "auto" },
-      }}
-    >
-      {infoSections.map((section, index) => (
-        <Box key={section.label} sx={{ mb: "20px" }}>
-          <Box
-            sx={{
-              fontFamily: mono,
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: "1px",
-              textTransform: "uppercase",
-              color: accentAt(index),
-              mb: "6px",
-            }}
-          >
-            {section.label}
-          </Box>
-          <Typography sx={{ fontSize: 16, lineHeight: 1.5, color: bodyMuted }}>
-            {project.info[section.text]}
-          </Typography>
-        </Box>
-      ))}
-    </Box>
-  );
-}
-
-function ProjectRow({
-  project,
-  reversed,
-}: {
-  project: ProjectItem;
-  reversed: boolean;
-}) {
+function ProjectRow({ project }: { project: ProjectItem }) {
   return (
     <Box
       className="reveal"
@@ -268,119 +381,15 @@ function ProjectRow({
         flexDirection: "column",
         transition: "transform .25s ease, box-shadow .25s ease",
         "&:hover": { transform: "translateY(-4px)", boxShadow: shadow(11) },
-        "@media (min-width: 1024px)": {
-          flexDirection: "row",
-        },
       }}
     >
-      {/* Preview: browser-chrome frame with a real screenshot. */}
-      <Box
-        sx={{
-          position: "relative",
-          overflow: "hidden",
-          background: backdrops[project.backdrop] ?? paperShade,
-          borderBottom: border,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: "28px",
-          minHeight: 320,
-          width: "100%",
-          "@media (min-width: 1024px)": {
-            order: reversed ? 2 : 1,
-            borderBottom: "none",
-            borderRight: reversed ? "none" : border,
-            borderLeft: reversed ? border : "none",
-            width: 640,
-          },
-        }}
-      >
-        <BrowserFrame project={project} />
-      </Box>
-
-      {/* Project identity and actions. */}
-      <Box
-        sx={{
-          p: "22px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          "@media (min-width: 1024px)": {
-            order: reversed ? 1 : 2,
-          },
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          {project.logo ? (
-            <Image
-              src={project.logo}
-              alt=""
-              width={44}
-              height={44}
-              style={{
-                borderRadius: "8px",
-                border: `2px solid ${ink}`,
-                objectFit: "contain",
-              }}
-            />
-          ) : null}
-          <Typography variant="h3" sx={{ fontSize: 24, m: 0 }}>
-            {project.title}
-          </Typography>
-          <MuiLink
-            href={project.link}
-            target="_blank"
-            rel="noopener"
-            underline="none"
-            sx={{
-              ...solidButton(orange),
-              fontSize: 14,
-              px: "18px",
-              py: "9px",
-            }}
-          >
-            Live Project ↗
-          </MuiLink>
-          {project.repo ? (
-            <MuiLink
-              href={project.repo}
-              target="_blank"
-              rel="noopener"
-              underline="none"
-              sx={{
-                fontFamily: mono,
-                fontSize: 13,
-                fontWeight: 700,
-                color: ink,
-                backgroundColor: paper,
-                border: borderThin,
-                borderRadius: "8px",
-                px: "16px",
-                py: "8px",
-                "&:hover": { backgroundColor: ink, color: paper },
-              }}
-            >
-              View Code ↗
-            </MuiLink>
-          ) : null}
-        </Box>
-
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-          {project.tags.map((tag) => (
-            <Chip key={tag} label={tag} size="small" />
-          ))}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "10px",
-            pt: "8px",
-          }}
-        >
-          <AppInfoPanel project={project} />
-        </Box>
+      <HeroMedia project={project} />
+      <MetaRow project={project} />
+      <Box sx={{ p: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
+        <DescriptionBlock project={project} />
+        <ChallengeRow project={project} />
+        <ProcessRow project={project} />
+        <OutcomeRow project={project} />
       </Box>
     </Box>
   );
@@ -441,13 +450,16 @@ export default function ProjectsCard() {
       <Box sx={{ position: "relative", zIndex: 1, maxWidth, width: "stretch" }}>
         <SectionHeader number="03" title="Selected Work" />
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "32px" }}>
-          {projectsData.map((project, index) => (
-            <ProjectRow
-              key={project.title}
-              project={project}
-              reversed={index % 2 === 1}
-            />
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: "24px",
+            "@media (min-width: 900px)": { gridTemplateColumns: "repeat(2, 1fr)" },
+          }}
+        >
+          {projectsData.map((project) => (
+            <ProjectRow key={project.title} project={project} />
           ))}
         </Box>
       </Box>

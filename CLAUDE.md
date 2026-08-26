@@ -42,7 +42,7 @@ There is no test suite configured in this repo.
   cards, canonical URL) at the layout level since this is a single route.
 - **`app/components/`** — one component per page section (`profileCard`, `featuresCard`, `skillsCard`,
   `projectsCard`, `downloadCard`, `contactCard`), plus shared chrome (`nav`, `sectionHeader`, `sectionShapes`,
-  `logoMark`, `loading`). Sections are composed in order directly in `app/page.tsx`.
+  `logoMark`). Sections are composed in order directly in `app/page.tsx`.
 - **`app/data/*.json`** — content for the page sections (projects, skills/icons, experience, features, contact
   icons) is data-driven from JSON rather than hardcoded in components. Prefer editing these files over
   component code when the task is a content change (new project, new skill, updated copy).
