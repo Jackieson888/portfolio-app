@@ -8,6 +8,7 @@ import SectionHeader from "./sectionHeader";
 import SectionShapes, { type Shape } from "./sectionShapes";
 import {
   blue,
+  blueText,
   bodyMuted,
   border,
   borderThin,
@@ -190,7 +191,7 @@ export default function DownloadCard() {
                       display: "flex",
                       flexDirection: "column",
                       gap: "5px",
-                      "& li::marker": { color: blue },
+                      "& li::marker": { color: blueText },
                     }}
                   >
                     {entry.points.map((point) => (
@@ -210,7 +211,7 @@ export default function DownloadCard() {
                   fontFamily: mono,
                   fontSize: 13,
                   fontWeight: 700,
-                  color: blue,
+                  color: blueText,
                   whiteSpace: "nowrap",
                   pt: "4px",
                 }}

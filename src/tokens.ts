@@ -15,6 +15,11 @@ export const paperShade = "#e2d9c2";
 export const accents = [orange, blue, yellow];
 export const accentAt = (i: number) => accents[i % accents.length];
 
+/** Darkened orange/blue for small text set directly on `paper` — the base
+ *  accents read as bright fills but fail WCAG AA (~2.6:1) as text on paper. */
+export const orangeText = "#AF3712";
+export const blueText = "#326688";
+
 /** Flat offset shadows only — never blurred. */
 export const shadow = (n: number) => `${n}px ${n}px 0 ${ink}`;
 

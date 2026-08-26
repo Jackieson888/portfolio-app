@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { ink, mono, orange, paper } from "@/src/tokens";
+import { ink, mono, orangeText, paper } from "@/src/tokens";
 
 type Props = {
   /** Two-digit section numeral, e.g. "01". */
@@ -14,7 +14,7 @@ type Props = {
 export default function SectionHeader({
   number,
   title,
-  accent = orange,
+  accent = orangeText,
   dark = false,
 }: Props) {
   return (

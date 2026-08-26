@@ -1,7 +1,4 @@
-"use client";
-
-import { useState } from "react";
-import { Box, Button, Chip, Link as MuiLink, Typography } from "@mui/material";
+import { Box, Chip, Link as MuiLink, Typography } from "@mui/material";
 import Image from "next/image";
 import projectsDataJson from "../data/projectsData.json";
 import SectionHeader from "./sectionHeader";
@@ -39,9 +36,11 @@ type ProjectItem = {
   repo: string;
   tags: string[];
   accent: string;
-  /** "live" embeds the real deploy; "placeholder" is for sites that block framing. */
-  frame: "live" | "placeholder";
-  /** Key into `backdrops` — themes the panel behind the device frame. */
+  /** Static hero screenshot shown in the browser-chrome frame. */
+  screenshot: string;
+  screenshotWidth: number;
+  screenshotHeight: number;
+  /** Key into `backdrops` — themes the panel behind the frame. */
   backdrop: string;
   info: AppInfo;
 };
@@ -69,6 +68,13 @@ const hatch = (step: number) =>
  * shadow, so a faithfully dark backdrop would swallow both.
  */
 const backdrops: Record<string, string> = {
+  // Salmonid Sim — river current: soft ripple lines under a caustic glow.
+  river: [
+    "repeating-linear-gradient(3deg, rgba(74,140,132,0.10) 0 2px, transparent 2px 18px)",
+    "radial-gradient(circle at 28% 68%, rgba(87,150,193,0.24) 0 130px, transparent 131px)",
+    "linear-gradient(180deg, #DCEAE6 0%, #E8F0E8 55%, #F2EFE0 100%)",
+  ].join(","),
+
   // This vs That — synthwave dusk: sun disc over a horizon grid.
   sunset: [
     "linear-gradient(180deg, transparent 0 63%, rgba(199,86,140,0.16) 63% 64%, transparent 64%)",
@@ -94,81 +100,91 @@ const backdrops: Record<string, string> = {
   ].join(","),
 };
 
-const PORTRAIT = { width: 440, height: 956 };
-const LANDSCAPE = { width: 956, height: 440 };
+/** Browser-chrome dots cycle the brand accents rather than literal red/amber/green. */
+const chromeDots = [orange, yellow, blue];
 
-function DeviceFrame({
-  project,
-  landscape,
-}: {
-  project: ProjectItem;
-  landscape: boolean;
-}) {
-  const size = landscape ? LANDSCAPE : PORTRAIT;
+function BrowserFrame({ project }: { project: ProjectItem }) {
+  const domain = project.link.replace(/^https?:\/\//, "").replace(/\/+$/, "");
 
   return (
     <Box
       sx={{
-        position: "relative",
-        width: `min(${size.width}px, 100%)`,
-        height: size.height,
-        maxHeight: "70vh",
+        width: "100%",
+        maxWidth: 600,
         backgroundColor: ink,
         border,
-        borderRadius: "40px",
-        px: landscape ? "14px" : "8px",
-        py: landscape ? "8px" : "14px",
+        borderRadius: "14px",
+        overflow: "hidden",
         boxShadow: shadow(6),
-        transition: "width .35s ease, height .35s ease, padding .35s ease",
       }}
     >
-      {/* Speaker notch — top edge in portrait, left edge in landscape. */}
       <Box
-        aria-hidden
         sx={{
-          position: "absolute",
-          backgroundColor: "#3a3a36",
-          borderRadius: "3px",
-          ...(landscape
-            ? {
-                left: "4px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                width: "5px",
-                height: "70px",
-              }
-            : {
-                top: "5px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: "70px",
-                height: "5px",
-              }),
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          px: "14px",
+          py: "10px",
+          borderBottom: "1px solid #3a3a36",
         }}
-      />
-
-      {project.frame === "live" ? (
+      >
+        <Box sx={{ display: "flex", gap: "6px", flexShrink: 0 }}>
+          {chromeDots.map((c, i) => (
+            <Box
+              key={i}
+              sx={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: c,
+              }}
+            />
+          ))}
+        </Box>
         <Box
-          component="iframe"
-          src={project.link}
-          title={`${project.title} live preview`}
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
           sx={{
-            display: "block",
-            width: "100%",
-            height: "100%",
-            border: "none",
-            borderRadius: "16px",
-            backgroundColor: "#fff",
+            flex: 1,
+            fontFamily: mono,
+            fontSize: 12,
+            color: "#928f80",
+            backgroundColor: "#141412",
+            border: "1px solid #3a3a36",
+            borderRadius: "6px",
+            px: "10px",
+            py: "4px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
-        />
+        >
+          {domain}
+        </Box>
+      </Box>
+
+      {project.screenshot ? (
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            aspectRatio: `${project.screenshotWidth} / ${project.screenshotHeight}`,
+            overflow: "hidden",
+            "& img": { transition: "transform .4s ease" },
+            "&:hover img": { transform: "scale(1.035)" },
+          }}
+        >
+          <Image
+            src={project.screenshot}
+            alt={`${project.title} screenshot`}
+            fill
+            sizes="(min-width: 1024px) 600px, 100vw"
+            style={{ objectFit: "cover", objectPosition: "top" }}
+          />
+        </Box>
       ) : (
         <Box
           sx={{
             width: "100%",
-            height: "100%",
-            borderRadius: "16px",
+            aspectRatio: "16 / 10",
             background: hatch(12),
             display: "flex",
             alignItems: "center",
@@ -189,9 +205,9 @@ function DeviceFrame({
               py: "5px",
             }}
           >
-            MOBILE
-            <br />
             SCREENSHOT
+            <br />
+            COMING SOON
           </Box>
         </Box>
       )}
@@ -232,9 +248,13 @@ function AppInfoPanel({ project }: { project: ProjectItem }) {
   );
 }
 
-function ProjectRow({ project }: { project: ProjectItem }) {
-  const [landscape, setLandscape] = useState(false);
-
+function ProjectRow({
+  project,
+  reversed,
+}: {
+  project: ProjectItem;
+  reversed: boolean;
+}) {
   return (
     <Box
       className="reveal"
@@ -253,69 +273,41 @@ function ProjectRow({ project }: { project: ProjectItem }) {
         },
       }}
     >
-      {/* Left: live device frame. */}
+      {/* Preview: browser-chrome frame with a real screenshot. */}
       <Box
         sx={{
           position: "relative",
           overflow: "hidden",
           background: backdrops[project.backdrop] ?? paperShade,
           borderBottom: border,
-          borderRight: "none",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "16px",
           p: "28px",
           minHeight: 320,
           width: "100%",
           "@media (min-width: 1024px)": {
+            order: reversed ? 2 : 1,
             borderBottom: "none",
-            borderRight: border,
-            width: 700,
+            borderRight: reversed ? "none" : border,
+            borderLeft: reversed ? border : "none",
+            width: 640,
           },
         }}
       >
-        <DeviceFrame project={project} landscape={landscape} />
-        <Button
-          onClick={() => setLandscape((prev) => !prev)}
-          sx={{
-            fontFamily: mono,
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.5px",
-            color: ink,
-            backgroundColor: paper,
-            border: borderThin,
-            borderRadius: "8px",
-            px: "14px",
-            py: "6px",
-            "&:hover": { backgroundColor: ink, color: paper },
-            "&:hover .rotate-glyph": { transform: "rotate(180deg)" },
-          }}
-        >
-          <Box
-            component="span"
-            className="rotate-glyph"
-            sx={{
-              display: "inline-block",
-              mr: "6px",
-              transition: "transform .35s ease",
-            }}
-          >
-            ↻
-          </Box>
-          View {landscape ? "Portrait" : "Landscape"}
-        </Button>
+        <BrowserFrame project={project} />
       </Box>
 
-      {/* Right: project identity and actions. */}
+      {/* Project identity and actions. */}
       <Box
         sx={{
           p: "22px",
           display: "flex",
           flexDirection: "column",
           gap: "12px",
+          "@media (min-width: 1024px)": {
+            order: reversed ? 1 : 2,
+          },
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -450,8 +442,12 @@ export default function ProjectsCard() {
         <SectionHeader number="03" title="Selected Work" />
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: "32px" }}>
-          {projectsData.map((project) => (
-            <ProjectRow key={project.title} project={project} />
+          {projectsData.map((project, index) => (
+            <ProjectRow
+              key={project.title}
+              project={project}
+              reversed={index % 2 === 1}
+            />
           ))}
         </Box>
       </Box>

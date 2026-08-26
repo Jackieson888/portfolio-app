@@ -1,5 +1,3 @@
-"use client";
-
 import { Box, Typography } from "@mui/material";
 import featuresDataJson from "../data/featuresData.json";
 import SectionHeader from "./sectionHeader";

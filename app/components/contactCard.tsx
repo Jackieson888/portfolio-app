@@ -1,5 +1,3 @@
-"use client";
-
 import { Box, Link as MuiLink, Typography } from "@mui/material";
 import Image from "next/image";
 import contactDataJson from "../data/contactIconData.json";

@@ -1,12 +1,32 @@
 [
   {
+    "title": "Salmonid Data Sim & Visualizer",
+    "logo": "",
+    "link": "https://salmonid-data-sim-and-visualizer.vercel.app",
+    "repo": "https://github.com/Jackieson888/salmonid-data-sim-and-visualizer",
+    "tags": ["Three.js", "GLSL", "Boids", "DART Data"],
+    "accent": "#5796C1",
+    "screenshot": "/projects/salmonid.png",
+    "screenshotWidth": 1440,
+    "screenshotHeight": 900,
+    "backdrop": "river",
+    "info": {
+      "description": "A Three.js flocking simulation of real Snake River fish passage — Reynolds boids (separation, alignment, cohesion) styled as the salmon run sweeping past a fixed underwater camera at Lower Granite Dam, with GPU caustics, volumetric light shafts, and a HUD reporting real daily counts published by Columbia Basin Research DART.",
+      "challenge": "The scene needed to read as one physical place lit by one sun, not a fish model floating over a generic ocean shader. Every surface — the water's fresnel shading, the riverbed, the light shafts, the drifting silt, even the lit flank of the fish themselves — samples the same real-time caustics texture, so moving the sun slides one light net across all of it instead of several effects drifting out of sync.",
+      "process": "The flocking engine is dimension-agnostic 2D boids over a spatial grid, reinterpreted as world X/Z only at the render boundary. Five of the eight DART-tracked species drive the flock; each authored fish model is a single skinned mesh with a baked Vertex Animation Texture, drawn as one InstancedMesh per species with tailbeat rate derived from real per-fish swim speed rather than a fixed frequency. Everything that plots against the timeline — the HUD's chart, the data-plates drawer, the fish viewer's sparkline — shares one date-to-x mapping, so the scrubber cursor never reads against two curves differently.",
+      "outcome": "Ten counting seasons (2006–2015) of real Lower Granite adult passage counts are vendored and swappable from a season select, rebuilding the chart, HUD, and plates in place. A slide-in drawer surfaces the season against its ten-year mean, species composition, river conditions, and run history, and a separate labeled fish viewer holds its anatomy callouts steady under a swimming, turning fish by pointing each leader line at the animated vertex while laying the label out against the resting one."
+    }
+  },
+  {
     "title": "ParaLayer",
     "logo": "",
     "link": "http://54.161.69.233/",
     "repo": "https://github.com/Jackieson888/parametric-insurance-mvp",
     "tags": ["Docker", "Postgres", "Redis", "NOAA API"],
     "accent": "#FFA837",
-    "frame": "live",
+    "screenshot": "/projects/paralayer.png",
+    "screenshotWidth": 1440,
+    "screenshotHeight": 900,
     "backdrop": "map",
     "info": {
       "description": "A calibration tool for parametric weather insurance that backtests trigger thresholds against 20 years of NOAA data and scores basis risk before a policy is ever sold.",
@@ -22,7 +42,9 @@
     "repo": "https://github.com/Jackieson888/bracket-app",
     "tags": ["MongoDB", "Next.js", "Cloudinary", "Auth0"],
     "accent": "#5796C1",
-    "frame": "live",
+    "screenshot": "/projects/tvt.png",
+    "screenshotWidth": 1440,
+    "screenshotHeight": 900,
     "backdrop": "sunset",
     "info": {
       "description": "A real-time, browser-based party game in the spirit of Jackbox's Bracketeering, where a room of players votes head-to-head on prompts and watches everyone else's picks land live.",
@@ -38,7 +60,9 @@
     "repo": "https://github.com/Jackieson888/game-rec-app",
     "tags": ["OpenAI", "Lambda", "IGDB API", "Next.js"],
     "accent": "#EA6137",
-    "frame": "live",
+    "screenshot": "/projects/game-gem.png",
+    "screenshotWidth": 560,
+    "screenshotHeight": 820,
     "backdrop": "arcade",
     "info": {
       "description": "A discovery tool, wrapped in a retro 8-bit gemstone-mining theme, that turns a plain-language vibe into a short list of IGDB-backed game recommendations you dig up as rated \"gems.\"",

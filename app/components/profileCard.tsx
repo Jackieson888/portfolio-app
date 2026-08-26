@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
   blue,
+  blueText,
   bodyStrong,
   border,
   display,
@@ -116,7 +117,7 @@ export default function ProfileCard() {
             fontWeight: 700,
             letterSpacing: "2px",
             textTransform: "uppercase",
-            color: blue,
+            color: blueText,
             mb: "18px",
           }}
         >
