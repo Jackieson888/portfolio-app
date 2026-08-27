@@ -141,6 +141,41 @@
       "process": "On the Find Gems screen you describe a mood in free text, optionally point it at a game you already liked via IGDB autocomplete, and filter by genre, mode, and keyword tags pulled live from IGDB. Submitting POSTs that payload to a Next.js API route, which forwards it through API Gateway to an AWS Lambda that queries an LLM and returns a handful of recommendations with a natural-language reason for each, while IGDB's own OAuth credentials stay server-side and never reach the browser. Each result comes back as a \"gem\" with its IGDB cover art, summary, and a rarity tier (Common/Rare/Epic/Legendary) derived from its community rating.",
       "outcome": "The result turns a vague \"something like Hollow Knight but shorter\" into concrete, explained picks instead of requiring you to already know what to search for, combining a real game database for accurate metadata with an LLM for the actual matching. A lightweight gamification layer, XP, prospector levels, visit streaks, and achievements, persists in the browser via localStorage to encourage repeat use without requiring an account, with an Amplify/Cognito backend scaffolded for a future move off local storage.",
       "challenge": "A vague mood like \"cozy but a little spooky\" isn't something a keyword filter or static tag search can resolve into good picks. Pairing IGDB for accurate, real-time game metadata with an LLM for the actual reasoning splits the problem cleanly: one system supplies ground truth, the other supplies judgment, and the loading screen's elapsed-time progress bar hides the latency of that round trip without ever lying about being done."
-    }
+    },
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/game-gem-media/hero.png",
+        "width": 1120,
+        "height": 1640,
+        "caption": "The home dashboard tracking prospector level, XP, and streak alongside the Find Gems and My Collection entry points",
+        "section": "hero"
+      },
+      {
+        "type": "image",
+        "src": "/projects/game-gem-media/challenge.png",
+        "width": 1120,
+        "height": 1640,
+        "caption": "The Find Gems screen turning a free-text mood, an optional reference game, and mode/genre filters into a structured query",
+        "section": "challenge"
+      },
+      {
+        "type": "video",
+        "src": "/projects/game-gem-media/process.mp4",
+        "poster": "/projects/game-gem-media/process-poster.png",
+        "width": 1120,
+        "height": 1640,
+        "caption": "Submitting a mood through the Next.js API route, API Gateway, and Lambda to dig up IGDB-backed gem recommendations",
+        "section": "process"
+      },
+      {
+        "type": "image",
+        "src": "/projects/game-gem-media/outcome.png",
+        "width": 1120,
+        "height": 5480,
+        "caption": "The gem collection with rarity tiers, a genre field guide, and achievements persisted entirely through localStorage",
+        "section": "outcome"
+      }
+    ]
   }
 ]
