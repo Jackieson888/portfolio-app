@@ -70,7 +70,42 @@
       "process": "An organization defines a trigger candidate, a peril, station, threshold, operator, and window, which queues a backtest job on Redis for a worker to pick up. The engine slices two decades of NOAA GHCN-Daily observations into consecutive, non-overlapping windows the length of the policy term, computes the peril's aggregate for each one, and checks it against NOAA's Storm Events Database as an independent proxy for real documented loss. A logistic regression fit on the same windows reports a held-out AUC alongside the result, so a low-signal station reads as \"the proxy can't judge this threshold\" rather than as a false failure.",
       "outcome": "Each run returns a false trigger rate and a missed loss rate, one per side of the contract, averaged into a single basis-risk score, plus a threshold sweep suggesting where to write the trigger for a target return period. Both NOAA datasets are cached in Postgres so re-ingestion only tops up new records, and while the demo console's tenants are fake, every backtest on screen runs on the same real weather and loss data a user's own candidate would.",
       "challenge": "A product that's never been sold has no claims history to validate against, so there's nothing to measure basis risk against. Using NOAA's Storm Events Database as a loss proxy solves that, but a proxy can be wrong, so every backtest also fits a held-out logistic regression to flag when the local data is too thin to trust the basis-risk number at all."
-    }
+    },
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/paralayer-media/hero.png",
+        "width": 2880,
+        "height": 1800,
+        "caption": "The trigger-candidate console backtesting excess-heat cover against 19 years of NOAA station data",
+        "section": "hero"
+      },
+      {
+        "type": "image",
+        "src": "/projects/paralayer-media/challenge.png",
+        "width": 1904,
+        "height": 1028,
+        "caption": "The basis-risk breakdown against documented loss, with the held-out AUC flagging how far to trust the proxy",
+        "section": "challenge"
+      },
+      {
+        "type": "video",
+        "src": "/projects/paralayer-media/process.mp4",
+        "poster": "/projects/paralayer-media/process-poster.jpg",
+        "width": 1440,
+        "height": 900,
+        "caption": "Cycling through trigger candidates — peril, station, and threshold — each queued as its own backtest run",
+        "section": "process"
+      },
+      {
+        "type": "image",
+        "src": "/projects/paralayer-media/outcome.png",
+        "width": 1904,
+        "height": 666,
+        "caption": "A finished backtest: fire rate, return period, basis risk, and the suggested threshold for a target return period",
+        "section": "outcome"
+      }
+    ]
   },
   {
     "title": "This vs That",
