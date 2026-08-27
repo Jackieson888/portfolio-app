@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Box, Chip, Link as MuiLink, Typography } from "@mui/material";
 import Image from "next/image";
-import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
 import projectsDataJson from "../data/projectsData.json";
 import SectionHeader from "./sectionHeader";
 import SectionShapes, { type Shape } from "./sectionShapes";
@@ -9,7 +8,6 @@ import { HoverPlayVideo } from "./inViewVideo";
 import {
   blue,
   bodyMuted,
-  border,
   borderThin,
   card,
   gutter,
@@ -115,7 +113,7 @@ function HeroMedia({ project }: { project: ProjectItem }) {
   const hero = heroMedia(project);
 
   return (
-    <Box sx={{ position: "relative", width: "100%", height: "clamp(170px, 22vw, 210px)", overflow: "hidden" }}>
+    <Box sx={{ position: "relative", width: "100%", height: "clamp(180px, 20vw, 200px)", overflow: "hidden" }}>
       {hero || project.screenshot ? (
         hero?.type === "video" ? (
           <HoverPlayVideo src={hero.src} poster={hero.poster ?? ""} alt={hero.caption} />
@@ -157,9 +155,7 @@ function MetaRow({ project }: { project: ProjectItem }) {
     <Box
       sx={{
         display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        justifyContent: "space-between",
+        flexDirection: "column",
         gap: "10px",
         p: "14px",
         borderBottom: borderThin,
@@ -212,7 +208,7 @@ function DescriptionBlock({ project }: { project: ProjectItem }) {
   return (
     <Typography
       sx={{
-        fontSize: 13,
+        fontSize: 12.5,
         lineHeight: 1.6,
         color: bodyMuted,
         borderLeft: `3px solid ${blue}`,
@@ -224,13 +220,90 @@ function DescriptionBlock({ project }: { project: ProjectItem }) {
   );
 }
 
-function ChallengeRow({ project }: { project: ProjectItem }) {
-  const media = mediaFor(project, "challenge");
+/** Fills a thumbnail slot: real media (video hover-plays, image is static) or the hatch fallback. */
+function Thumbnail({ media, hatchStep }: { media?: ProjectMedia; hatchStep: number }) {
+  if (!media) {
+    return <Box sx={{ position: "absolute", inset: 0, background: hatch(hatchStep) }} />;
+  }
+  return media.type === "video" ? (
+    <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} />
+  ) : (
+    <Image src={media.src} alt={media.caption} fill sizes="220px" style={{ objectFit: "cover" }} />
+  );
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+/**
+ * Derives an actual thumbnail box from the media's real aspect ratio, holding the section's
+ * target area (baseWidth × baseHeight) roughly constant so rows stay comparable in visual
+ * weight across cards, while the box shape follows the source image/video instead of forcing
+ * every project into an identical crop. Falls back to the base rectangle when a section has no
+ * media yet (hatch placeholder — no real dimensions to key off of).
+ */
+function thumbSize(media: ProjectMedia | undefined, baseWidth: number, baseHeight: number) {
+  if (!media?.width || !media?.height) return { width: baseWidth, height: baseHeight };
+  const aspect = media.width / media.height;
+  const area = baseWidth * baseHeight;
+  const height = clamp(Math.sqrt(area / aspect), baseHeight * 0.55, baseHeight * 1.8);
+  const width = clamp(height * aspect, baseWidth * 0.55, baseWidth * 1.8);
+  return { width: Math.round(width), height: Math.round(height) };
+}
+
+/**
+ * One breakdown row (Challenge/Process/Outcome): a bordered white card holding label + text
+ * beside a plain rectangular thumbnail — never rotated, never circular. `side` puts the
+ * thumbnail on the left or right of the text; baseWidth/baseHeight set the section's target
+ * size, adjusted per-project via `thumbSize` to match the real media's aspect ratio.
+ */
+function BreakdownRow({
+  label,
+  color,
+  marker,
+  text,
+  media,
+  side,
+  baseWidth,
+  baseHeight,
+}: {
+  label: string;
+  color: string;
+  marker?: ReactNode;
+  text: string;
+  media?: ProjectMedia;
+  side: "left" | "right";
+  baseWidth: number;
+  baseHeight: number;
+}) {
+  const { width, height } = thumbSize(media, baseWidth, baseHeight);
+
+  const thumb = (
+    <Box
+      sx={{
+        position: "relative",
+        width,
+        height,
+        flexShrink: 0,
+        borderRadius: "3px",
+        overflow: "hidden",
+        border: `1.5px solid ${ink}`,
+      }}
+    >
+      <Thumbnail media={media} hatchStep={6} />
+    </Box>
+  );
+
+  const copy = (
+    <Box sx={{ flex: 1, minWidth: 0 }}>
+      <RowLabel text={label} color={color} marker={marker} />
+      <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>{text}</Typography>
+    </Box>
+  );
 
   return (
     <Box
       sx={{
-        border: borderThin,
+        border: `1.5px solid ${ink}`,
         borderRadius: "4px",
         backgroundColor: card,
         p: "12px",
@@ -239,130 +312,8 @@ function ChallengeRow({ project }: { project: ProjectItem }) {
         gap: "12px",
       }}
     >
-      <Box sx={{ flex: 1, minWidth: 0 }}>
-        <RowLabel
-          text="Challenge"
-          color={orange}
-          marker={<Box sx={{ width: 8, height: 8, backgroundColor: orange, flexShrink: 0 }} />}
-        />
-        <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>
-          {project.info.challenge}
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          position: "relative",
-          width: 78,
-          height: 58,
-          flexShrink: 0,
-          borderRadius: "6px",
-          overflow: "hidden",
-          border: borderThin,
-          boxShadow: shadow(3),
-          transform: "rotate(-2deg)",
-        }}
-      >
-        {media ? (
-          media.type === "video" ? (
-            <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} />
-          ) : (
-            <Image src={media.src} alt={media.caption} fill sizes="78px" style={{ objectFit: "cover" }} />
-          )
-        ) : (
-          <Box sx={{ position: "absolute", inset: 0, background: hatch(6) }} />
-        )}
-      </Box>
-    </Box>
-  );
-}
-
-function ProcessRow({ project }: { project: ProjectItem }) {
-  const media = mediaFor(project, "process");
-
-  return (
-    <Box sx={{ border: borderThin, borderRadius: "4px", backgroundColor: card, overflow: "hidden" }}>
-      <Box sx={{ position: "relative", width: "100%", height: 38 }}>
-        {media ? (
-          media.type === "video" ? (
-            <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} showIndicator={false} />
-          ) : (
-            <Image src={media.src} alt={media.caption} fill sizes="100vw" style={{ objectFit: "cover" }} />
-          )
-        ) : (
-          <Box sx={{ position: "absolute", inset: 0, background: hatch(6) }} />
-        )}
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "10px",
-            transform: "translateY(-50%)",
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            backgroundColor: "rgba(255,255,255,0.9)",
-            border: borderThin,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            pointerEvents: "none",
-          }}
-        >
-          <PlayArrowRounded sx={{ color: ink, fontSize: 18 }} />
-        </Box>
-      </Box>
-      <Box sx={{ p: "12px" }}>
-        <RowLabel text="Process" color={blue} />
-        <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>
-          {project.info.process}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
-
-function OutcomeRow({ project }: { project: ProjectItem }) {
-  const media = mediaFor(project, "outcome");
-
-  return (
-    <Box
-      sx={{
-        border: borderThin,
-        borderRadius: "4px",
-        backgroundColor: card,
-        p: "12px",
-        display: "flex",
-        alignItems: "center",
-        gap: "12px",
-      }}
-    >
-      <Box
-        sx={{
-          position: "relative",
-          width: 52,
-          height: 52,
-          flexShrink: 0,
-          borderRadius: "50%",
-          overflow: "hidden",
-          border: borderThin,
-        }}
-      >
-        {media ? (
-          media.type === "video" ? (
-            <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} />
-          ) : (
-            <Image src={media.src} alt={media.caption} fill sizes="52px" style={{ objectFit: "cover" }} />
-          )
-        ) : (
-          <Box sx={{ position: "absolute", inset: 0, background: hatch(4) }} />
-        )}
-      </Box>
-      <Box sx={{ flex: 1, minWidth: 0 }}>
-        <RowLabel text="Outcome" color={yellow} marker={<TriangleMarker />} />
-        <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>
-          {project.info.outcome}
-        </Typography>
-      </Box>
+      {side === "left" ? thumb : copy}
+      {side === "left" ? copy : thumb}
     </Box>
   );
 }
@@ -373,23 +324,49 @@ function ProjectRow({ project }: { project: ProjectItem }) {
       className="reveal"
       sx={{
         backgroundColor: card,
-        border,
-        borderRadius: "12px",
+        border: borderThin,
+        borderRadius: "2px",
         overflow: "hidden",
-        boxShadow: shadow(8),
+        boxShadow: shadow(6),
         display: "flex",
         flexDirection: "column",
         transition: "transform .25s ease, box-shadow .25s ease",
-        "&:hover": { transform: "translateY(-4px)", boxShadow: shadow(11) },
+        "&:hover": { transform: "translateY(-4px)", boxShadow: shadow(9) },
       }}
     >
       <HeroMedia project={project} />
       <MetaRow project={project} />
       <Box sx={{ p: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
         <DescriptionBlock project={project} />
-        <ChallengeRow project={project} />
-        <ProcessRow project={project} />
-        <OutcomeRow project={project} />
+        <BreakdownRow
+          label="Challenge"
+          color={orange}
+          marker={<Box sx={{ width: 8, height: 8, backgroundColor: orange, flexShrink: 0 }} />}
+          text={project.info.challenge}
+          media={mediaFor(project, "challenge")}
+          side="right"
+          baseWidth={84}
+          baseHeight={62}
+        />
+        <BreakdownRow
+          label="Process"
+          color={blue}
+          text={project.info.process}
+          media={mediaFor(project, "process")}
+          side="left"
+          baseWidth={110}
+          baseHeight={78}
+        />
+        <BreakdownRow
+          label="Outcome"
+          color={yellow}
+          marker={<TriangleMarker />}
+          text={project.info.outcome}
+          media={mediaFor(project, "outcome")}
+          side="right"
+          baseWidth={64}
+          baseHeight={48}
+        />
       </Box>
     </Box>
   );
