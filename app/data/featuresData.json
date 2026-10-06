@@ -1,22 +1,22 @@
 [
   {
     "title": "Front-End Development",
-    "experience": "6+ years",
-    "description": "Crafting fast, responsive, and accessible interfaces with TypeScript, React, and Next.js, plus Vue and Angular. Focused on performance, usability, and cross-browser reliability."
+    "experience": "4+ years",
+    "description": "Crafting fast, responsive, and accessible interfaces with TypeScript, React, and Next.js, plus Vue, Angular, and Tailwind. Focused on performance, data-heavy views, and cross-browser reliability."
   },
   {
     "title": "Back-End Development",
-    "experience": "5+ years",
-    "description": "Building scalable APIs and server-side systems with Node.js, Python, and .NET. Engineering REST and GraphQL integrations across distributed services, with PostgreSQL and MongoDB modeling, SQL optimization, and caching under load."
+    "experience": "4+ years",
+    "description": "Building scalable APIs and server-side systems with Node.js/TypeScript and Python. Engineering RESTful integrations across distributed services, with PostgreSQL, MySQL, MongoDB, and DynamoDB data modeling and query optimization."
   },
   {
     "title": "Cloud & DevOps",
-    "experience": "5+ years",
-    "description": "Designing AWS infrastructure for distributed workloads, background processing, and scalable API services. Experienced with Terraform, Docker, CI/CD pipelines, and production monitoring."
+    "experience": "4+ years",
+    "description": "Designing AWS infrastructure (Lambda, EC2, S3, CloudFormation, CodeBuild, CodePipeline, Amplify) for distributed workloads and API services serving 15,000 active users. Docker, CI/CD with GitHub Actions, and production monitoring with CloudWatch and OpenSearch."
   },
   {
     "title": "Software Architecture",
-    "experience": "3+ years",
+    "experience": "1+ years",
     "description": "Architecting maintainable, scalable systems and owning them end-to-end — performance, reliability, observability, and long-term maintainability. Comfortable evaluating trade-offs and guiding technical direction across teams."
   },
   {
@@ -27,6 +27,6 @@
   {
     "title": "AI-Accelerated Development",
     "experience": "1+ years",
-    "description": "Shipping with Claude Code, Copilot, and Cursor as part of the daily workflow, plus custom LLM agents and MCP integrations to speed delivery, raise test coverage, and automate documentation."
+    "description": "Shipping with Claude Code as part of the daily workflow, plus custom agents, skills, and MCP (Model Context Protocol) integrations to speed delivery, raise test coverage, and automate documentation."
   }
 ]

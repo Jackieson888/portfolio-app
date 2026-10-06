@@ -1,21 +1,175 @@
 [
   {
+    "title": "edh-tool",
+    "kind": "Full-stack web app · AI data pipeline",
+    "year": "2026",
+    "link": "https://www.edh-tool.com",
+    "repo": "https://github.com/Jackieson888/edh-tool",
+    "hook": "Popularity-ranked deck tools steer every Commander player toward the same cards. edh-tool uses AI-tagged card data to find the strong ones nobody is playing.",
+    "facts": {
+      "problem": "Sites like EDHREC rank cards by how often they're already played, so a strong card nobody has heard of looks exactly like a weak one. Players end up building the same decks.",
+      "built": "An offline Python pipeline that has Claude tag each card against an 80-tag vocabulary and write themes for each commander, a dependency-free JavaScript scoring engine, and a Next.js site with theme recommendations, a browser-based deck builder, and Moxfield/Archidekt export.",
+      "role": "Solo developer, with Claude Code as a pair-programmer: product design, the AI pipeline, the scoring model, and the full-stack site, from Postgres schema to UI. I compared models against a hand-tagged set before committing to the full run.",
+      "outcome": "12,580 cards tagged and 4,463 themes generated across 792 commanders, live at edh-tool.com. Trimming the model's output format cut output tokens by 68% while still matching hand tags just as closely, bringing the full tagging run to $12.41."
+    },
+    "metrics": [
+      { "value": "12,580", "label": "cards tagged by AI" },
+      { "value": "792", "label": "commanders with themes" },
+      { "value": "$12.41", "label": "for the full tagging run" }
+    ],
+    "stack": ["Next.js", "TypeScript", "Python", "Claude API", "PostgreSQL", "Vercel", "Tailwind"],
+    "details": [
+      {
+        "heading": "One scoring engine everywhere",
+        "body": "Each card's score is fit × commander synergy × quality × popularity × art match, computed by a single pure-JS module that runs in the API routes, the CLI, the tuning bench, and the tests, so a score on the site is the same score everywhere. Five picks per theme are drawn by seeded weighted sampling, so a player's list stays stable while they build, and two players with the same commander still see different cards."
+      },
+      {
+        "heading": "Separating unknown from bad",
+        "body": "The obscurity bonus uses log rank, because popularity follows a power law, and it's gated by the model's quality estimate so obscure junk never gets lifted. Across 200 simulated players, each theme surfaces 21–40 distinct cards."
+      },
+      {
+        "heading": "Choosing the model with data",
+        "body": "Sonnet and Haiku tagged the same 221 cards and were scored against hand tags. Haiku found tags about as often but rated weak cards 0.59 versus Sonnet's 0.34, which would have broken the gem filter. I picked Sonnet and cut cost with the Batch API and a slimmer output format instead of a smaller model."
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/edh-tool-media/theme.jpg",
+        "width": 800,
+        "height": 900,
+        "caption": "A commander theme with its five high-impact picks; \"Hidden gem\" marks strong cards outside the popular staples"
+      },
+      {
+        "type": "video",
+        "src": "/projects/edh-tool-media/reroll.webm",
+        "poster": "/projects/edh-tool-media/reroll-poster.jpg",
+        "width": 800,
+        "height": 500,
+        "caption": "Reroll draws a fresh seeded set of picks from the 557 cards that fit the deck's theme and aren't in it yet"
+      },
+      {
+        "type": "image",
+        "src": "/projects/edh-tool-media/deck.jpg",
+        "width": 800,
+        "height": 900,
+        "caption": "The deck builder: a theme-seeded starting list grouped by type, saved entirely in the browser"
+      },
+      {
+        "type": "image",
+        "src": "/projects/edh-tool-media/analytics.jpg",
+        "width": 800,
+        "height": 900,
+        "caption": "Live deck analytics: mana curve, card types, color pips, bracket estimate, and price"
+      },
+      {
+        "type": "image",
+        "src": "/projects/edh-tool-media/scoring.jpg",
+        "width": 800,
+        "height": 900,
+        "caption": "The scoring breakdown behind every pick: fit × commander × quality × popularity × art"
+      }
+    ]
+  },
+  {
+    "title": "Live Trading Screen",
+    "kind": "Desktop app · C# / WPF · .NET 10",
+    "year": "2026",
+    "repo": "https://github.com/Jackieson888/TradingApp",
+    "hook": "Market data arrives far faster than a screen can draw it. This real-time trading screen stays responsive at up to 17,000 order-book updates per second.",
+    "facts": {
+      "problem": "A trading UI that redraws on every market message either crashes from cross-thread access or freezes under thousands of queued UI calls per second.",
+      "built": "A read-only Windows trading screen with a hand-drawn price chart, an order-book ladder, and a watchlist, fed by Kraken's live WebSocket order books or an offline simulator. Plain-English labels throughout make it readable for someone who has never traded.",
+      "role": "Solo developer, with Claude Code as a pair-programmer. I set the product direction and the core architecture, made unit tests a requirement, and reviewed, ran, and QA'd the code against live data. It was my first WPF app and my first C# in over five years.",
+      "outcome": "The UI does the same work whether 60 or 17,000 updates arrive per second, and the chart draws in under 1 ms per frame. The 82 unit tests caught a real price-rounding bug on DOGE/USD during development."
+    },
+    "metrics": [
+      { "value": "17k/s", "label": "book updates handled" },
+      { "value": "<1 ms", "label": "chart draw per frame" },
+      { "value": "82", "label": "xUnit tests" }
+    ],
+    "stack": ["C#", ".NET 10", "WPF / XAML", "WebSockets", "Multithreading", "xUnit", "Claude Code"],
+    "details": [
+      {
+        "heading": "The UI pulls, the feed never pushes",
+        "body": "A background thread keeps a private order book per market and, after every change, publishes an immutable snapshot by atomically replacing a dictionary entry. A 60 Hz timer on the UI thread is the only path to the screen, so there are no locks, no per-update dispatcher calls, and the UI can never see a half-updated book."
+      },
+      {
+        "heading": "Bounded by design",
+        "body": "Price history is sampled at 10 Hz (about 3,000 points per market over 5 minutes), so memory and drawing cost don't grow with feed speed. Prices are stored as integer ticks so floating-point dust can't create duplicate levels."
+      },
+      {
+        "heading": "Hand-drawn controls",
+        "body": "The chart (line and candlestick, crosshair, live time axis) and the ladder render directly in OnRender instead of thousands of per-cell elements, costing 0.5–0.8 ms of UI-thread time per frame. Live and simulated feeds sit behind one interface and are fully interchangeable."
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/tradingapp-media/hero.png",
+        "width": 1380,
+        "height": 840,
+        "caption": "Candlestick chart with crosshair, watchlist, and order-book ladder on the simulated feed"
+      },
+      {
+        "type": "video",
+        "src": "/projects/tradingapp-media/chart.webm",
+        "poster": "/projects/tradingapp-media/chart-poster.jpg",
+        "width": 960,
+        "height": 584,
+        "caption": "Chart features: hover crosshair, line ↔ candles, and 1/2/5-minute windows (simulated feed)"
+      },
+      {
+        "type": "video",
+        "src": "/projects/tradingapp-media/markets.webm",
+        "poster": "/projects/tradingapp-media/markets-poster.jpg",
+        "width": 960,
+        "height": 584,
+        "caption": "Switching between live Kraken markets, each with its own history and order book"
+      },
+      {
+        "type": "video",
+        "src": "/projects/tradingapp-media/click.webm",
+        "poster": "/projects/tradingapp-media/click-poster.jpg",
+        "width": 960,
+        "height": 584,
+        "caption": "Clicking either side of the ladder logs a simulated order at the clicked price (live Kraken feed)"
+      }
+    ]
+  },
+  {
     "title": "Salmonid Data Sim & Visualizer",
-    "logo": "",
+    "kind": "Interactive 3D data visualization · Three.js",
+    "year": "2026",
     "link": "https://salmonid-data-sim-and-visualizer.vercel.app",
     "repo": "https://github.com/Jackieson888/salmonid-data-sim-and-visualizer",
-    "tags": ["Three.js", "GLSL", "Boids", "DART Data"],
-    "accent": "#5796C1",
-    "screenshot": "/projects/salmonid.png",
-    "screenshotWidth": 1440,
-    "screenshotHeight": 900,
-    "backdrop": "river",
-    "info": {
-      "description": "A Three.js flocking simulation of real Snake River fish passage — Reynolds boids (separation, alignment, cohesion) styled as the salmon run sweeping past a fixed underwater camera at Lower Granite Dam, with GPU caustics, volumetric light shafts, and a HUD reporting real daily counts published by Columbia Basin Research DART.",
-      "challenge": "The scene needed to read as one physical place lit by one sun, not a fish model floating over a generic ocean shader. Every surface — the water's fresnel shading, the riverbed, the light shafts, the drifting silt, even the lit flank of the fish themselves — samples the same real-time caustics texture, so moving the sun slides one light net across all of it instead of several effects drifting out of sync.",
-      "process": "The flocking engine is dimension-agnostic 2D boids over a spatial grid, reinterpreted as world X/Z only at the render boundary. Five of the eight DART-tracked species drive the flock; each authored fish model is a single skinned mesh with a baked Vertex Animation Texture, drawn as one InstancedMesh per species with tailbeat rate derived from real per-fish swim speed rather than a fixed frequency. Everything that plots against the timeline — the HUD's chart, the data-plates drawer, the fish viewer's sparkline — shares one date-to-x mapping, so the scrubber cursor never reads against two curves differently.",
-      "outcome": "Ten counting seasons (2006–2015) of real Lower Granite adult passage counts are vendored and swappable from a season select, rebuilding the chart, HUD, and plates in place. A slide-in drawer surfaces the season against its ten-year mean, species composition, river conditions, and run history, and a separate labeled fish viewer holds its anatomy callouts steady under a swimming, turning fish by pointing each leader line at the animated vertex while laying the label out against the resting one."
+    "hook": "Fish-passage counts are numbers in a spreadsheet. This turns ten seasons of real Snake River salmon data into a living underwater scene you can scrub through.",
+    "facts": {
+      "problem": "Columbia Basin Research's daily fish counts are public but dense, and hard to feel as anything more than a table.",
+      "built": "A Three.js flocking simulation of the salmon run passing Lower Granite Dam's underwater camera, with GPU caustics and light shafts, plus a HUD, season drawer, and labeled fish viewer driven by real daily counts.",
+      "role": "Solo developer, with Claude Code as a pair-programmer: concept, simulation, shaders, data wrangling, and UI.",
+      "outcome": "Ten counting seasons (2006–2015) swap in place from a season selector, with five tracked species driving the flock and each species drawn as a single instanced mesh."
     },
+    "metrics": [
+      { "value": "10", "label": "seasons of real data" },
+      { "value": "5", "label": "species in the flock" },
+      { "value": "1", "label": "draw call per species" }
+    ],
+    "stack": ["Three.js", "GLSL", "Boids", "Vertex Animation Textures", "Data visualization", "Vercel", "Claude Code"],
+    "details": [
+      {
+        "heading": "One sun, one light",
+        "body": "The water's fresnel shading, the riverbed, the light shafts, the drifting silt, and the fish themselves all sample the same real-time caustics texture, so moving the sun slides one light net across the whole scene instead of several effects drifting out of sync."
+      },
+      {
+        "heading": "Cheap, believable motion",
+        "body": "Flocking runs as 2D boids over a spatial grid, mapped to world X/Z only at render time. Each fish is a skinned mesh baked to a Vertex Animation Texture, with tailbeat rate derived from real per-fish swim speed."
+      },
+      {
+        "heading": "One timeline",
+        "body": "The HUD chart, data drawer, and fish-viewer sparkline share one date-to-x mapping, so the scrubber never reads differently against two curves."
+      }
+    ],
     "media": [
       {
         "type": "video",
@@ -23,8 +177,7 @@
         "poster": "/projects/salmonid-media/hero-poster.jpg",
         "width": 1600,
         "height": 1000,
-        "caption": "The flock sweeping past the fixed underwater camera at Lower Granite Dam",
-        "section": "hero"
+        "caption": "The flock sweeping past the fixed underwater camera at Lower Granite Dam"
       },
       {
         "type": "video",
@@ -32,8 +185,7 @@
         "poster": "/projects/salmonid-media/challenge-poster.jpg",
         "width": 1600,
         "height": 1000,
-        "caption": "Caustics, light shafts, riverbed, and fish shading all sliding together as the sun moves",
-        "section": "challenge"
+        "caption": "Caustics, light shafts, riverbed, and fish shading all sliding together as the sun moves"
       },
       {
         "type": "video",
@@ -41,140 +193,14 @@
         "poster": "/projects/salmonid-media/process-poster.jpg",
         "width": 1600,
         "height": 1050,
-        "caption": "Scrubbing the HUD timeline updates the chart, data-plates drawer, and fish-viewer sparkline in lockstep",
-        "section": "process"
+        "caption": "Scrubbing the HUD timeline updates the chart, data drawer, and fish-viewer sparkline in lockstep"
       },
       {
         "type": "image",
         "src": "/projects/salmonid-media/outcome.png",
         "width": 2400,
         "height": 2550,
-        "caption": "The season drawer against its ten-year mean, species composition, and river conditions",
-        "section": "outcome"
-      }
-    ]
-  },
-  {
-    "title": "ParaLayer",
-    "logo": "",
-    "link": "http://54.161.69.233/",
-    "repo": "https://github.com/Jackieson888/parametric-insurance-mvp",
-    "tags": ["Docker", "Postgres", "Redis", "NOAA API"],
-    "accent": "#FFA837",
-    "screenshot": "/projects/paralayer.png",
-    "screenshotWidth": 1440,
-    "screenshotHeight": 900,
-    "backdrop": "map",
-    "info": {
-      "description": "A calibration tool for parametric weather insurance that backtests trigger thresholds against 20 years of NOAA data and scores basis risk before a policy is ever sold.",
-      "process": "An organization defines a trigger candidate, a peril, station, threshold, operator, and window, which queues a backtest job on Redis for a worker to pick up. The engine slices two decades of NOAA GHCN-Daily observations into consecutive, non-overlapping windows the length of the policy term, computes the peril's aggregate for each one, and checks it against NOAA's Storm Events Database as an independent proxy for real documented loss. A logistic regression fit on the same windows reports a held-out AUC alongside the result, so a low-signal station reads as \"the proxy can't judge this threshold\" rather than as a false failure.",
-      "outcome": "Each run returns a false trigger rate and a missed loss rate, one per side of the contract, averaged into a single basis-risk score, plus a threshold sweep suggesting where to write the trigger for a target return period. Both NOAA datasets are cached in Postgres so re-ingestion only tops up new records, and while the demo console's tenants are fake, every backtest on screen runs on the same real weather and loss data a user's own candidate would.",
-      "challenge": "A product that's never been sold has no claims history to validate against, so there's nothing to measure basis risk against. Using NOAA's Storm Events Database as a loss proxy solves that, but a proxy can be wrong, so every backtest also fits a held-out logistic regression to flag when the local data is too thin to trust the basis-risk number at all."
-    },
-    "media": [
-      {
-        "type": "image",
-        "src": "/projects/paralayer-media/hero.png",
-        "width": 2880,
-        "height": 1800,
-        "caption": "The trigger-candidate console backtesting excess-heat cover against 19 years of NOAA station data",
-        "section": "hero"
-      },
-      {
-        "type": "image",
-        "src": "/projects/paralayer-media/challenge.png",
-        "width": 1904,
-        "height": 1028,
-        "caption": "The basis-risk breakdown against documented loss, with the held-out AUC flagging how far to trust the proxy",
-        "section": "challenge"
-      },
-      {
-        "type": "video",
-        "src": "/projects/paralayer-media/process.mp4",
-        "poster": "/projects/paralayer-media/process-poster.jpg",
-        "width": 1440,
-        "height": 900,
-        "caption": "Cycling through trigger candidates — peril, station, and threshold — each queued as its own backtest run",
-        "section": "process"
-      },
-      {
-        "type": "image",
-        "src": "/projects/paralayer-media/outcome.png",
-        "width": 1904,
-        "height": 666,
-        "caption": "A finished backtest: fire rate, return period, basis risk, and the suggested threshold for a target return period",
-        "section": "outcome"
-      }
-    ]
-  },
-  {
-    "title": "This vs That",
-    "logo": "/tvt-game-logo.png",
-    "link": "https://tvt-game.app",
-    "repo": "https://github.com/Jackieson888/bracket-app",
-    "tags": ["MongoDB", "Next.js", "Cloudinary", "Auth0"],
-    "accent": "#5796C1",
-    "screenshot": "/projects/tvt.png",
-    "screenshotWidth": 1440,
-    "screenshotHeight": 900,
-    "backdrop": "sunset",
-    "info": {
-      "description": "A real-time, browser-based party game in the spirit of Jackbox's Bracketeering, where a room of players votes head-to-head on prompts and watches everyone else's picks land live.",
-      "process": "The websocket layer used to live inside the main Next.js runtime, so an EC2 host serving only socket connections still had to carry the full app's build and dependency surface. It's since been split into two runtimes: Amplify hosts the Next.js frontend and API routes, while a standalone Node process on EC2 handles only /ws upgrades, sharing a room-lifecycle module that manages reconnect hydration, TTL-based expiration, and vote broadcast to everyone in the room. PowerShell bootstrap scripts drive the EC2 side end to end, pulling the repo, installing just the realtime-runtime dependency set, wiring up the systemd service, and fronting it with an Nginx reverse proxy with optional Let's Encrypt TLS.",
-      "outcome": "The split keeps the EC2 dependency and build surface down to a handful of realtime-only packages, no Next.js build required, while Amplify keeps owning the app deploys it's actually suited for. Rooms persist snapshots to MongoDB so players can reconnect and rehydrate state after a drop, and both session expiration and idle in-memory cleanup run on their own configurable TTLs, so a play session self-destructs 30 minutes after creation without any manual upkeep.",
-      "challenge": "Websockets need a long-lived process, which doesn't fit a serverless app host, but shipping the whole Next.js app onto EC2 just to serve /ws upgrades wastes the build and dependency surface. Splitting the realtime runtime into its own minimal Node process, fronted by Nginx and backed by MongoDB for reconnect hydration, let each half run on the infrastructure it's actually suited for."
-    }
-  },
-  {
-    "title": "Game Gem",
-    "logo": "",
-    "link": "https://game-gem.com",
-    "repo": "https://github.com/Jackieson888/game-rec-app",
-    "tags": ["OpenAI", "Lambda", "IGDB API", "Next.js"],
-    "accent": "#EA6137",
-    "screenshot": "/projects/game-gem.png",
-    "screenshotWidth": 560,
-    "screenshotHeight": 820,
-    "backdrop": "arcade",
-    "info": {
-      "description": "A discovery tool, wrapped in a retro 8-bit gemstone-mining theme, that turns a plain-language vibe into a short list of IGDB-backed game recommendations you dig up as rated \"gems.\"",
-      "process": "On the Find Gems screen you describe a mood in free text, optionally point it at a game you already liked via IGDB autocomplete, and filter by genre, mode, and keyword tags pulled live from IGDB. Submitting POSTs that payload to a Next.js API route, which forwards it through API Gateway to an AWS Lambda that queries an LLM and returns a handful of recommendations with a natural-language reason for each, while IGDB's own OAuth credentials stay server-side and never reach the browser. Each result comes back as a \"gem\" with its IGDB cover art, summary, and a rarity tier (Common/Rare/Epic/Legendary) derived from its community rating.",
-      "outcome": "The result turns a vague \"something like Hollow Knight but shorter\" into concrete, explained picks instead of requiring you to already know what to search for, combining a real game database for accurate metadata with an LLM for the actual matching. A lightweight gamification layer, XP, prospector levels, visit streaks, and achievements, persists in the browser via localStorage to encourage repeat use without requiring an account, with an Amplify/Cognito backend scaffolded for a future move off local storage.",
-      "challenge": "A vague mood like \"cozy but a little spooky\" isn't something a keyword filter or static tag search can resolve into good picks. Pairing IGDB for accurate, real-time game metadata with an LLM for the actual reasoning splits the problem cleanly: one system supplies ground truth, the other supplies judgment, and the loading screen's elapsed-time progress bar hides the latency of that round trip without ever lying about being done."
-    },
-    "media": [
-      {
-        "type": "image",
-        "src": "/projects/game-gem-media/hero.png",
-        "width": 1120,
-        "height": 1640,
-        "caption": "The home dashboard tracking prospector level, XP, and streak alongside the Find Gems and My Collection entry points",
-        "section": "hero"
-      },
-      {
-        "type": "image",
-        "src": "/projects/game-gem-media/challenge.png",
-        "width": 1120,
-        "height": 1640,
-        "caption": "The Find Gems screen turning a free-text mood, an optional reference game, and mode/genre filters into a structured query",
-        "section": "challenge"
-      },
-      {
-        "type": "video",
-        "src": "/projects/game-gem-media/process.mp4",
-        "poster": "/projects/game-gem-media/process-poster.png",
-        "width": 1120,
-        "height": 1640,
-        "caption": "Submitting a mood through the Next.js API route, API Gateway, and Lambda to dig up IGDB-backed gem recommendations",
-        "section": "process"
-      },
-      {
-        "type": "image",
-        "src": "/projects/game-gem-media/outcome.png",
-        "width": 1120,
-        "height": 5480,
-        "caption": "The gem collection with rarity tiers, a genre field guide, and achievements persisted entirely through localStorage",
-        "section": "outcome"
+        "caption": "The season drawer against its ten-year mean, species composition, and river conditions"
       }
     ]
   }

@@ -79,7 +79,7 @@ export default function FeaturesCard() {
       <SectionShapes shapes={shapes} />
 
       <Box sx={{ position: "relative", zIndex: 1, maxWidth }}>
-        <SectionHeader number="01" title="Core Expertise" />
+        <SectionHeader number="03" title="Core Expertise" />
 
         <Box
           sx={{

@@ -98,7 +98,43 @@ export default function ContactCard() {
             mb: "14px",
           }}
         >
-          05 — GET IN TOUCH
+          06 — GET IN TOUCH
+        </Box>
+
+        <Box
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "10px",
+            fontFamily: mono,
+            fontSize: 12.5,
+            fontWeight: 700,
+            letterSpacing: "0.5px",
+            color: paper,
+            border: `2px solid ${paper}`,
+            borderRadius: "20px",
+            px: "14px",
+            py: "6px",
+            mb: "22px",
+          }}
+        >
+          <Box
+            aria-hidden
+            sx={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              backgroundColor: blue,
+              flexShrink: 0,
+              animation: "availabilityPulse 2.4s ease-in-out infinite",
+              "@keyframes availabilityPulse": {
+                "0%, 100%": { boxShadow: `0 0 0 0 ${blue}99` },
+                "50%": { boxShadow: `0 0 0 7px ${blue}00` },
+              },
+              "@media (prefers-reduced-motion: reduce)": { animation: "none" },
+            }}
+          />
+          Open to new opportunities
         </Box>
 
         <Typography
@@ -124,9 +160,9 @@ export default function ContactCard() {
             mb: "36px",
           }}
         >
-          Open to full-stack engineering roles building and scaling production
-          web applications — React/Next.js, distributed APIs, and AWS. Reach out
-          below, or grab my resume.
+          Whether it&apos;s engineering, front-end, or product design, I&apos;m
+          interested in roles where I can build and ship things people actually
+          use. Reach out below, or grab my resume.
         </Typography>
 
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>

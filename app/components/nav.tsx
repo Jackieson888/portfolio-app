@@ -6,8 +6,9 @@ import LogoMark from "./logoMark";
 import { border, gutter, ink, mono, orange, paper } from "@/src/tokens";
 
 const navItems = [
-  { href: "#toolkit", label: "Skills" },
   { href: "#work", label: "Work" },
+  { href: "#about", label: "About" },
+  { href: "#toolkit", label: "Skills" },
   { href: "#experience", label: "Experience" },
 ];
 
@@ -65,8 +66,8 @@ export function Navbar() {
         justifyContent: "space-between",
         gap: "16px",
         px: gutter,
-        py: "14px",
-        flexWrap: "wrap",
+        py: { xs: "10px", sm: "14px" },
+        flexWrap: "nowrap",
       }}
     >
       <MuiLink
@@ -79,10 +80,11 @@ export function Navbar() {
           variant="h6"
           component="span"
           sx={{
-            fontSize: 20,
+            fontSize: { xs: 18, sm: 20 },
             fontWeight: 700,
             letterSpacing: "0.5px",
             color: ink,
+            whiteSpace: "nowrap",
           }}
         >
           Jackson Schacher
@@ -93,8 +95,8 @@ export function Navbar() {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: "22px",
-          flexWrap: "wrap",
+          gap: { xs: "12px", md: "22px" },
+          flexWrap: "nowrap",
         }}
       >
         {navItems.map(({ href, label }) => {
@@ -107,6 +109,8 @@ export function Navbar() {
               aria-current={isActive ? "true" : undefined}
               sx={{
                 position: "relative",
+                display: { xs: "none", sm: "inline-block" },
+                py: "6px",
                 fontFamily: mono,
                 fontWeight: 700,
                 fontSize: 13,
@@ -118,7 +122,7 @@ export function Navbar() {
                   content: '""',
                   position: "absolute",
                   left: 0,
-                  bottom: "-6px",
+                  bottom: "0px",
                   height: "3px",
                   width: "100%",
                   backgroundColor: orange,
@@ -143,8 +147,9 @@ export function Navbar() {
             fontSize: 13,
             textTransform: "uppercase",
             letterSpacing: "1px",
-            px: "18px",
-            py: "9px",
+            whiteSpace: "nowrap",
+            px: { xs: "14px", sm: "18px" },
+            py: { xs: "8px", sm: "9px" },
             backgroundColor: orange,
             color: ink,
             border,

@@ -1,0 +1,126 @@
+[
+  {
+    "title": "ParaLayer",
+    "logo": "",
+    "link": "http://54.161.69.233/",
+    "repo": "https://github.com/Jackieson888/parametric-insurance-mvp",
+    "tags": ["Docker", "Postgres", "Redis", "NOAA API"],
+    "accent": "#FFA837",
+    "screenshot": "/projects/paralayer.png",
+    "screenshotWidth": 1440,
+    "screenshotHeight": 900,
+    "backdrop": "map",
+    "info": {
+      "description": "A calibration tool for parametric weather insurance that backtests trigger thresholds against 20 years of NOAA data and scores basis risk before a policy is ever sold.",
+      "process": "An organization defines a trigger candidate, a peril, station, threshold, operator, and window, which queues a backtest job on Redis for a worker to pick up. The engine slices two decades of NOAA GHCN-Daily observations into consecutive, non-overlapping windows the length of the policy term, computes the peril's aggregate for each one, and checks it against NOAA's Storm Events Database as an independent proxy for real documented loss. A logistic regression fit on the same windows reports a held-out AUC alongside the result, so a low-signal station reads as \"the proxy can't judge this threshold\" rather than as a false failure.",
+      "outcome": "Each run returns a false trigger rate and a missed loss rate, one per side of the contract, averaged into a single basis-risk score, plus a threshold sweep suggesting where to write the trigger for a target return period. Both NOAA datasets are cached in Postgres so re-ingestion only tops up new records, and while the demo console's tenants are fake, every backtest on screen runs on the same real weather and loss data a user's own candidate would.",
+      "challenge": "A product that's never been sold has no claims history to validate against, so there's nothing to measure basis risk against. Using NOAA's Storm Events Database as a loss proxy solves that, but a proxy can be wrong, so every backtest also fits a held-out logistic regression to flag when the local data is too thin to trust the basis-risk number at all."
+    },
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/paralayer-media/hero.png",
+        "width": 2880,
+        "height": 1800,
+        "caption": "The trigger-candidate console backtesting excess-heat cover against 19 years of NOAA station data",
+        "section": "hero"
+      },
+      {
+        "type": "image",
+        "src": "/projects/paralayer-media/challenge.png",
+        "width": 1904,
+        "height": 1028,
+        "caption": "The basis-risk breakdown against documented loss, with the held-out AUC flagging how far to trust the proxy",
+        "section": "challenge"
+      },
+      {
+        "type": "video",
+        "src": "/projects/paralayer-media/process.mp4",
+        "poster": "/projects/paralayer-media/process-poster.jpg",
+        "width": 1440,
+        "height": 900,
+        "caption": "Cycling through trigger candidates — peril, station, and threshold — each queued as its own backtest run",
+        "section": "process"
+      },
+      {
+        "type": "image",
+        "src": "/projects/paralayer-media/outcome.png",
+        "width": 1904,
+        "height": 666,
+        "caption": "A finished backtest: fire rate, return period, basis risk, and the suggested threshold for a target return period",
+        "section": "outcome"
+      }
+    ]
+  },
+  {
+    "title": "This vs That",
+    "logo": "/tvt-game-logo.png",
+    "link": "https://tvt-game.app",
+    "repo": "https://github.com/Jackieson888/bracket-app",
+    "tags": ["MongoDB", "Next.js", "Cloudinary", "Auth0"],
+    "accent": "#5796C1",
+    "screenshot": "/projects/tvt.png",
+    "screenshotWidth": 1440,
+    "screenshotHeight": 900,
+    "backdrop": "sunset",
+    "info": {
+      "description": "A real-time, browser-based party game in the spirit of Jackbox's Bracketeering, where a room of players votes head-to-head on prompts and watches everyone else's picks land live.",
+      "process": "The websocket layer used to live inside the main Next.js runtime, so an EC2 host serving only socket connections still had to carry the full app's build and dependency surface. It's since been split into two runtimes: Amplify hosts the Next.js frontend and API routes, while a standalone Node process on EC2 handles only /ws upgrades, sharing a room-lifecycle module that manages reconnect hydration, TTL-based expiration, and vote broadcast to everyone in the room. PowerShell bootstrap scripts drive the EC2 side end to end, pulling the repo, installing just the realtime-runtime dependency set, wiring up the systemd service, and fronting it with an Nginx reverse proxy with optional Let's Encrypt TLS.",
+      "outcome": "The split keeps the EC2 dependency and build surface down to a handful of realtime-only packages, no Next.js build required, while Amplify keeps owning the app deploys it's actually suited for. Rooms persist snapshots to MongoDB so players can reconnect and rehydrate state after a drop, and both session expiration and idle in-memory cleanup run on their own configurable TTLs, so a play session self-destructs 30 minutes after creation without any manual upkeep.",
+      "challenge": "Websockets need a long-lived process, which doesn't fit a serverless app host, but shipping the whole Next.js app onto EC2 just to serve /ws upgrades wastes the build and dependency surface. Splitting the realtime runtime into its own minimal Node process, fronted by Nginx and backed by MongoDB for reconnect hydration, let each half run on the infrastructure it's actually suited for."
+    }
+  },
+  {
+    "title": "Game Gem",
+    "logo": "",
+    "link": "https://game-gem.com",
+    "repo": "https://github.com/Jackieson888/game-rec-app",
+    "tags": ["OpenAI", "Lambda", "IGDB API", "Next.js"],
+    "accent": "#EA6137",
+    "screenshot": "/projects/game-gem.png",
+    "screenshotWidth": 560,
+    "screenshotHeight": 820,
+    "backdrop": "arcade",
+    "info": {
+      "description": "A discovery tool, wrapped in a retro 8-bit gemstone-mining theme, that turns a plain-language vibe into a short list of IGDB-backed game recommendations you dig up as rated \"gems.\"",
+      "process": "On the Find Gems screen you describe a mood in free text, optionally point it at a game you already liked via IGDB autocomplete, and filter by genre, mode, and keyword tags pulled live from IGDB. Submitting POSTs that payload to a Next.js API route, which forwards it through API Gateway to an AWS Lambda that queries an LLM and returns a handful of recommendations with a natural-language reason for each, while IGDB's own OAuth credentials stay server-side and never reach the browser. Each result comes back as a \"gem\" with its IGDB cover art, summary, and a rarity tier (Common/Rare/Epic/Legendary) derived from its community rating.",
+      "outcome": "The result turns a vague \"something like Hollow Knight but shorter\" into concrete, explained picks instead of requiring you to already know what to search for, combining a real game database for accurate metadata with an LLM for the actual matching. A lightweight gamification layer, XP, prospector levels, visit streaks, and achievements, persists in the browser via localStorage to encourage repeat use without requiring an account, with an Amplify/Cognito backend scaffolded for a future move off local storage.",
+      "challenge": "A vague mood like \"cozy but a little spooky\" isn't something a keyword filter or static tag search can resolve into good picks. Pairing IGDB for accurate, real-time game metadata with an LLM for the actual reasoning splits the problem cleanly: one system supplies ground truth, the other supplies judgment, and the loading screen's elapsed-time progress bar hides the latency of that round trip without ever lying about being done."
+    },
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/game-gem-media/hero.png",
+        "width": 1120,
+        "height": 1640,
+        "caption": "The home dashboard tracking prospector level, XP, and streak alongside the Find Gems and My Collection entry points",
+        "section": "hero"
+      },
+      {
+        "type": "image",
+        "src": "/projects/game-gem-media/challenge.png",
+        "width": 1120,
+        "height": 1640,
+        "caption": "The Find Gems screen turning a free-text mood, an optional reference game, and mode/genre filters into a structured query",
+        "section": "challenge"
+      },
+      {
+        "type": "video",
+        "src": "/projects/game-gem-media/process.mp4",
+        "poster": "/projects/game-gem-media/process-poster.png",
+        "width": 1120,
+        "height": 1640,
+        "caption": "Submitting a mood through the Next.js API route, API Gateway, and Lambda to dig up IGDB-backed gem recommendations",
+        "section": "process"
+      },
+      {
+        "type": "image",
+        "src": "/projects/game-gem-media/outcome.png",
+        "width": 1120,
+        "height": 5480,
+        "caption": "The gem collection with rarity tiers, a genre field guide, and achievements persisted entirely through localStorage",
+        "section": "outcome"
+      }
+    ]
+  }
+]

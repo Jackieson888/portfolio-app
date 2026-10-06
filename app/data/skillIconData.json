@@ -10,6 +10,11 @@
     "category": "Languages"
   },
   {
+    "title": "SQL",
+    "path": "database-search.svg",
+    "category": "Languages"
+  },
+  {
     "title": "Python",
     "path": "language-python.svg",
     "category": "Languages"
@@ -17,16 +22,6 @@
   {
     "title": "C#",
     "path": "language-csharp.svg",
-    "category": "Languages"
-  },
-  {
-    "title": "Golang",
-    "path": "language-go.svg",
-    "category": "Languages"
-  },
-  {
-    "title": "C++",
-    "path": "language-cpp.svg",
     "category": "Languages"
   },
   {
@@ -95,12 +90,12 @@
     "category": "Data & APIs"
   },
   {
-    "title": "GraphQL",
-    "path": "graphql.svg",
+    "title": "PostgreSQL",
+    "path": "database.svg",
     "category": "Data & APIs"
   },
   {
-    "title": "PostgreSQL",
+    "title": "MySQL",
     "path": "database.svg",
     "category": "Data & APIs"
   },
@@ -110,18 +105,13 @@
     "category": "Data & APIs"
   },
   {
-    "title": "SQL Optimization",
-    "path": "database-search.svg",
+    "title": "DynamoDB",
+    "path": "database-cog.svg",
     "category": "Data & APIs"
   },
   {
     "title": "AWS",
     "path": "aws.svg",
-    "category": "Cloud & DevOps"
-  },
-  {
-    "title": "Terraform",
-    "path": "terraform.svg",
     "category": "Cloud & DevOps"
   },
   {
@@ -132,6 +122,11 @@
   {
     "title": "CI/CD",
     "path": "source-branch.svg",
+    "category": "Cloud & DevOps"
+  },
+  {
+    "title": "GitHub Actions",
+    "path": "github.svg",
     "category": "Cloud & DevOps"
   },
   {
@@ -165,22 +160,32 @@
     "category": "Cloud & DevOps"
   },
   {
+    "title": "Jest",
+    "path": "jest.svg",
+    "category": "Testing"
+  },
+  {
+    "title": "Cypress",
+    "path": "cypress.svg",
+    "category": "Testing"
+  },
+  {
+    "title": "Playwright",
+    "path": "playwright.svg",
+    "category": "Testing"
+  },
+  {
+    "title": "Mocha",
+    "path": "mocha.svg",
+    "category": "Testing"
+  },
+  {
     "title": "Claude Code",
-    "path": "robot.svg",
+    "path": "claude.svg",
     "category": "AI Development"
   },
   {
-    "title": "GitHub Copilot",
-    "path": "robot.svg",
-    "category": "AI Development"
-  },
-  {
-    "title": "Cursor",
-    "path": "robot.svg",
-    "category": "AI Development"
-  },
-  {
-    "title": "Custom AI Agents",
+    "title": "Custom Agents & Skills",
     "path": "robot.svg",
     "category": "AI Development"
   },

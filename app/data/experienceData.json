@@ -7,32 +7,36 @@
       "dates": "2021 — 2026",
       "logo": "sekady-logo.png",
       "points": [
-        "Owned major product areas end-to-end, from design through production rollout, instrumentation, and long-term maintenance.",
-        "Engineered REST and GraphQL integrations across distributed services, reducing integration failures and improving cross-service data consistency under load.",
-        "Designed and maintained AWS infrastructure supporting distributed workloads, background processing, and scalable API services.",
-        "Used Claude Code, Copilot, and custom LLM agents to accelerate delivery, improve test coverage, and automate documentation."
+        "Owned major product areas end-to-end across the full stack, including the fund control dashboard and inspection wizard, from design through production rollout, instrumentation, and long-term maintenance.",
+        "Engineered RESTful API integrations across distributed services using Node.js/TypeScript, reducing integration failures and improving cross-service data consistency under load.",
+        "Designed and maintained AWS infrastructure (CloudFormation, CodeBuild, CodePipeline) supporting distributed workloads, background processing, and scalable API services for 15,000 active users.",
+        "Built data aggregations and optimized data inflow in Vue/Next.js, cutting page load times by 80%.",
+        "Set up integrated testing and automated test runners, cutting code review and deployment time by ~30% while reducing production incidents.",
+        "Reduced third-party geolocation and map-rendering costs by ~$2,000/year with no loss of functionality."
       ]
     },
     {
       "title": "Behavioral Support Specialist",
       "org": "Developmental Concepts | Consumer Direct Care Network Idaho",
-      "location": "Boise, ID",
+      "location": "Boise & Lewiston, ID",
       "dates": "2014 — 2021",
       "logo": "cdid-logo.png",
       "points": [
-        "Designed data-driven support programs built on daily behavioral logging and analysis.",
-        "Solved problems under pressure using structured crisis-management techniques."
+        "Supported children with disabilities, most of them non-verbal, logging and analyzing daily behavioral data to develop data-driven support plans.",
+        "Resolved high-pressure situations using structured crisis-management techniques.",
+        "Worked independently and autonomously with clients across a varied caseload."
       ]
     },
     {
-      "title": "Technical Support Analyst",
+      "title": "IT Support Technician",
       "org": "Galexis Technology",
       "location": "Pullman, WA",
       "dates": "2013 — 2014",
       "logo": "galexis-logo.png",
       "points": [
-        "Deployed infrastructure for mid-to-large organizations across cloud-native and on-prem systems.",
-        "Configured networks and maintained environments across diverse corporate deployments."
+        "Installed and configured relay antennas to deliver rural internet service across the Palouse region.",
+        "Provided customer support on basic to complex computer and network issues.",
+        "Advised small businesses and individuals on network solutions, security concerns, and technology setup."
       ]
     }
   ],

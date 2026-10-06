@@ -1,0 +1,22 @@
+{
+  "lead": "I came to software the long way around, and it's the reason I build the way I do.",
+  "intro": "Before I wrote production code, I spent seven years supporting children with disabilities, most of them non-verbal. When someone can't tell you what's wrong, you learn to watch what they actually do, measure it, and change the environment instead of the person. I still build software that way.",
+  "chapters": [
+    {
+      "when": "2013",
+      "title": "The Palouse",
+      "body": "My first tech job was installing relay antennas to bring internet to rural customers across the Palouse, then helping them and local small businesses get set up. Lesson one: technology only counts once it works for the person using it."
+    },
+    {
+      "when": "2014–2021",
+      "title": "Behavioral support",
+      "body": "Throughout college I worked as a behavioral support specialist in Boise and Lewiston, Idaho, mostly with non-verbal kids. I logged and analyzed behavior every day to figure out what each child needed, turned it into data-driven support plans, and learned to stay calm and structured when a day went sideways."
+    },
+    {
+      "when": "2020–2026",
+      "title": "Software engineering",
+      "body": "My B.S. in Virtual Technology & Design from the University of Idaho blends programming, 3D modeling, animation, and human-centered design, taught in project-based studios where every year ends in a portfolio review. Add a 500-hour full-stack program at CodeWorks, and it led to 4+ years at Sekady Capital owning products for 15,000 users end to end. Now I build with AI agents every day, and I still measure whether the thing actually helps."
+    }
+  ],
+  "outro": "When I'm not coding, I'm fishing Idaho rivers, which is how ten seasons of Snake River fish counts became one of my projects."
+}

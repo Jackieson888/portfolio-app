@@ -10,6 +10,7 @@
     "lint:fix": "eslint --fix"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.124",
     "@ai-sdk/react": "^3.0.170",
     "@aws-sdk/client-s3": "^3.1038.0",
     "@emotion/cache": "^11.14.0",

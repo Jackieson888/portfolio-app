@@ -29,7 +29,8 @@ const groups = [
   { name: "Frameworks & Libraries", accent: orange },
   { name: "Data & APIs", accent: blue },
   { name: "Cloud & DevOps", accent: yellow },
-  { name: "AI Development", accent: orange },
+  { name: "Testing", accent: orange },
+  { name: "AI Development", accent: blue },
 ];
 
 // On the dark panel the shapes read as glow rather than silhouette, so they
@@ -81,19 +82,26 @@ export default function SkillsCard() {
         overflow: "hidden",
         backgroundColor: ink,
         px: gutter,
-        py: "64px",
+        py: "52px",
       }}
     >
       <SectionShapes shapes={shapes} />
 
       <Box sx={{ position: "relative", zIndex: 1, maxWidth, mx: "auto" }}>
-        <SectionHeader number="02" title="Toolkit" accent={yellow} dark />
+        <SectionHeader number="04" title="Toolkit" accent={yellow} dark />
 
         {groups.map((group, index) => (
           <Box
             key={group.name}
             className="reveal"
-            sx={{ mb: index === groups.length - 1 ? 0 : "28px" }}
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "190px 1fr" },
+              gap: { xs: "8px", md: "16px" },
+              alignItems: "baseline",
+              py: "12px",
+              borderTop: index === 0 ? "none" : "1px solid rgba(238,230,211,0.14)",
+            }}
           >
             <Box
               sx={{
@@ -102,12 +110,11 @@ export default function SkillsCard() {
                 letterSpacing: "1.5px",
                 textTransform: "uppercase",
                 color: group.accent,
-                mb: "14px",
               }}
             >
               {group.name}
             </Box>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
               {iconData
                 .filter((skill) => skill.category === group.name)
                 .map((skill) => (
@@ -116,27 +123,27 @@ export default function SkillsCard() {
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "8px",
+                      gap: "6px",
                       backgroundColor: paper,
                       border: `2px solid ${paper}`,
-                      borderRadius: "8px",
-                      px: "14px",
-                      py: "8px",
+                      borderRadius: "6px",
+                      px: "10px",
+                      py: "4px",
                       transition: "transform .15s ease",
-                      "&:hover": { transform: "translateY(-3px)" },
+                      "&:hover": { transform: "translateY(-2px)" },
                     }}
                   >
                     {skill.path ? (
                       <Image
                         src={`/icons/${skill.path}`}
                         alt=""
-                        width={18}
-                        height={18}
+                        width={15}
+                        height={15}
                       />
                     ) : null}
                     <Box
                       component="span"
-                      sx={{ fontSize: 14, fontWeight: 600, color: ink }}
+                      sx={{ fontSize: 13, fontWeight: 600, color: ink }}
                     >
                       {skill.title}
                     </Box>

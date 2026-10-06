@@ -97,7 +97,7 @@ export default function DownloadCard() {
       <SectionShapes shapes={shapes} />
 
       <Box sx={{ position: "relative", zIndex: 1 }}>
-        <SectionHeader number="04" title="Experience" />
+        <SectionHeader number="05" title="Experience" />
 
         <Box
           sx={{

@@ -10,7 +10,7 @@ import { roboto } from "@/src/fonts";
 import { Navbar } from "./components/nav";
 
 const description =
-  "Full-stack software engineer with 6+ years building, deploying, and scaling production web applications. React/Next.js, distributed API design, and AWS cloud architecture.";
+  "Full-stack software engineer with 4+ years building, deploying, and scaling production web applications. React/Next.js, Node.js/TypeScript, distributed REST API design, and AWS cloud architecture.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jackson-schacher.com"),
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     "Node.js",
     "Python",
     "AWS",
-    "GraphQL",
+    "REST APIs",
     "PostgreSQL",
     "UI/UX Design",
   ],
@@ -36,13 +36,13 @@ export const metadata: Metadata = {
     description,
     url: "/",
     siteName: "Jackson Schacher",
-    images: [{ url: "/profile-pic.png", width: 500, height: 500, alt: "Jackson Schacher" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Jackson Schacher, Full-Stack Software Engineer" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Jackson Schacher — Full-Stack Software Engineer",
     description,
-    images: ["/profile-pic.png"],
+    images: ["/og-image.png"],
   },
 };
 

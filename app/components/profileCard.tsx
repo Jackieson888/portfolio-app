@@ -25,11 +25,15 @@ const roles = [
   { title: "UI/UX Designer", color: yellow },
 ];
 
+/** Career-wide numbers across professional work, projects, and education in dev and design. */
 const stats = [
-  { value: "6+", label: "Years Experience", color: orange },
-  { value: "3", label: "Certifications", color: blue },
-  { value: "3+", label: "Shipped Projects", color: yellow },
+  { value: "4+", label: "Years shipping production code", color: orange },
+  { value: "10+", label: "Apps & projects built", color: blue },
+  { value: "3", label: "Credentials in dev & design", color: yellow },
 ];
+
+/** Optional scheduling link (Calendly, Cal.com, …). The "Book a call" button only renders when it's set. */
+const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";
 
 export default function ProfileCard() {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -180,12 +184,12 @@ export default function ProfileCard() {
             mb: "32px",
           }}
         >
-          Full-stack software engineer with 6+ years building, deploying, and
+          Full-stack software engineer with 4+ years building, deploying, and
           scaling production web applications. Strong in React/Next.js,
-          distributed API design, and AWS cloud architecture — owning systems
-          end-to-end across performance, reliability, observability, and
-          long-term maintainability. Daily practitioner of AI coding agents to
-          accelerate delivery.
+          Node.js/TypeScript, distributed REST API design, and AWS cloud
+          architecture — owning systems end-to-end, from design through
+          production rollout, monitoring, and long-term maintenance. Uses AI
+          coding agents daily to accelerate delivery.
         </Typography>
 
         <Box
@@ -217,7 +221,9 @@ export default function ProfileCard() {
             Get In Touch
           </MuiLink>
           <MuiLink
-            href="#work"
+            href={bookingUrl || "#work"}
+            target={bookingUrl ? "_blank" : undefined}
+            rel={bookingUrl ? "noopener" : undefined}
             underline="none"
             sx={{
               px: "28px",
@@ -232,7 +238,7 @@ export default function ProfileCard() {
               "&:hover": { backgroundColor: ink, color: paper },
             }}
           >
-            View My Work
+            {bookingUrl ? "Book a 15-min call ↗" : "View My Work"}
           </MuiLink>
           <MuiLink
             href="/jackson-schacher-resume.pdf"
@@ -256,7 +262,14 @@ export default function ProfileCard() {
           </MuiLink>
         </Box>
 
-        <Box sx={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: { xs: "10px", sm: "14px" },
+            maxWidth: 520,
+          }}
+        >
           {stats.map((stat) => (
             <Box
               key={stat.label}
@@ -264,9 +277,9 @@ export default function ProfileCard() {
                 backgroundColor: stat.color,
                 border,
                 borderRadius: "8px",
-                px: "20px",
+                px: { xs: "12px", sm: "16px" },
                 py: "14px",
-                minWidth: 120,
+                minWidth: 0,
                 transition: "transform .2s ease, box-shadow .2s ease",
                 "&:hover": {
                   transform: "translateY(-4px)",
@@ -286,10 +299,11 @@ export default function ProfileCard() {
               </Box>
               <Box
                 sx={{
-                  fontSize: 12,
+                  fontSize: { xs: 10.5, sm: 12 },
                   textTransform: "uppercase",
-                  letterSpacing: "0.5px",
-                  mt: "4px",
+                  letterSpacing: { xs: 0, sm: "0.5px" },
+                  lineHeight: 1.3,
+                  mt: "6px",
                 }}
               >
                 {stat.label}

@@ -1,372 +1,313 @@
-import type { ReactNode } from "react";
 import { Box, Chip, Link as MuiLink, Typography } from "@mui/material";
-import Image from "next/image";
 import projectsDataJson from "../data/projectsData.json";
 import SectionHeader from "./sectionHeader";
 import SectionShapes, { type Shape } from "./sectionShapes";
-import { HoverPlayVideo } from "./inViewVideo";
+import ProjectGallery, { type GalleryMedia } from "./projectGallery";
 import {
+  accentAt,
   blue,
+  blueText,
   bodyMuted,
+  bodyStrong,
+  border,
   borderThin,
   card,
+  display,
   gutter,
   ink,
   maxWidth,
   mono,
+  monoLabel,
   orange,
+  orangeText,
   paper,
   shadow,
   solidButton,
   yellow,
 } from "@/src/tokens";
 
-type AppInfo = {
-  description: string;
-  challenge: string;
-  process: string;
-  outcome: string;
-};
-
-type MediaSection = "hero" | "description" | "challenge" | "process" | "outcome";
-
-type ProjectMedia = {
-  type: "image" | "video";
-  src: string;
-  /** Required in practice for type: "video" — first-frame JPG for layout-stable loading. */
-  poster?: string;
-  width: number;
-  height: number;
-  /** Short human-readable line, also used as the image alt / video aria-label. */
-  caption: string;
-  section: MediaSection;
-};
-
+/**
+ * One case study. The copy follows the recruiter-skim order: a problem-first hook that has to
+ * land on its own, then problem / what was built / role / quantified outcome in a line each,
+ * with the deeper engineering story tucked into an optional "How it works" disclosure.
+ */
 type ProjectItem = {
   title: string;
-  logo: string;
-  link: string;
-  repo: string;
-  tags: string[];
-  accent: string;
-  /** Legacy static hero screenshot — hero fallback when no `media` entry has section: "hero". */
-  screenshot: string;
-  screenshotWidth: number;
-  screenshotHeight: number;
-  backdrop: string;
-  info: AppInfo;
-  /** Optional per-section clips/images. Absent = hero-screenshot + hatch-placeholder render. */
-  media?: ProjectMedia[];
+  /** Eyebrow line: what kind of thing it is and the headline stack, e.g. "Desktop app · C# / WPF". */
+  kind: string;
+  year: string;
+  /** Live URL. Omit for things with no hosted demo (desktop apps). */
+  link?: string;
+  linkLabel?: string;
+  repo?: string;
+  /** The first line a reviewer reads: the problem and why the project matters. */
+  hook: string;
+  facts: {
+    problem: string;
+    built: string;
+    role: string;
+    outcome: string;
+  };
+  /** Exactly three reads best: the numbers that back up the outcome. */
+  metrics: { value: string; label: string }[];
+  /** 5–7 skills used, most important first. */
+  stack: string[];
+  details?: { heading: string; body: string }[];
+  /** First item is the default stage view and sets the stage's aspect ratio. */
+  media: GalleryMedia[];
 };
 
 const projectsData = projectsDataJson as ProjectItem[];
 
-const heroMedia = (project: ProjectItem) =>
-  project.media?.find((m) => m.section === "hero");
+/** Text-safe version of each accent, for small labels on white. */
+const textAccent = (accent: string) =>
+  accent === orange ? orangeText : accent === blue ? blueText : ink;
 
-const mediaFor = (project: ProjectItem, section: MediaSection) =>
-  project.media?.find((m) => m.section === section);
+const factRows: { key: keyof ProjectItem["facts"]; label: string }[] = [
+  { key: "problem", label: "Problem" },
+  { key: "built", label: "What I built" },
+  { key: "role", label: "My role" },
+  { key: "outcome", label: "Outcome" },
+];
 
-/** Diagonal hatch used wherever real artwork hasn't been dropped in yet. */
-const hatch = (step: number) =>
-  `repeating-linear-gradient(45deg, ${paper}, ${paper} ${step}px, #d8cfb6 ${step}px, #d8cfb6 ${step * 2}px)`;
-
-/** Small mono section label — e.g. CHALLENGE/PROCESS/OUTCOME — tinted per its accent. */
-function RowLabel({ text, color, marker }: { text: string; color: string; marker?: ReactNode }) {
+function Metrics({ metrics }: { metrics: ProjectItem["metrics"] }) {
   return (
     <Box
+      component="ul"
       sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: "6px",
-        fontFamily: mono,
-        fontSize: 10,
-        fontWeight: 700,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        color,
-        mb: "6px",
-      }}
-    >
-      {marker}
-      {text}
-    </Box>
-  );
-}
-
-function TriangleMarker() {
-  return (
-    <Box
-      sx={{
-        width: 0,
-        height: 0,
-        borderLeft: "5px solid transparent",
-        borderRight: "5px solid transparent",
-        borderBottom: `9px solid ${yellow}`,
-        flexShrink: 0,
-      }}
-    />
-  );
-}
-
-function HeroMedia({ project }: { project: ProjectItem }) {
-  const hero = heroMedia(project);
-
-  return (
-    <Box sx={{ position: "relative", width: "100%", height: "clamp(180px, 20vw, 200px)", overflow: "hidden" }}>
-      {hero || project.screenshot ? (
-        hero?.type === "video" ? (
-          <HoverPlayVideo src={hero.src} poster={hero.poster ?? ""} alt={hero.caption} />
-        ) : (
-          <Image
-            src={hero?.src ?? project.screenshot}
-            alt={hero?.caption ?? `${project.title} screenshot`}
-            fill
-            sizes="(min-width: 900px) 50vw, 100vw"
-            style={{ objectFit: "cover" }}
-          />
-        )
-      ) : (
-        <Box sx={{ position: "absolute", inset: 0, background: hatch(12) }} />
-      )}
-      <Box
-        sx={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(0deg, rgba(28,26,23,.75) 0%, transparent 45%)",
-          display: "flex",
-          alignItems: "flex-end",
-          p: "14px",
-          pointerEvents: "none",
-        }}
-      >
-        <Typography variant="h3" sx={{ fontSize: 22, color: "#fff", m: 0 }}>
-          {project.title}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
-
-function MetaRow({ project }: { project: ProjectItem }) {
-  const [primaryTag, ...restTags] = project.tags;
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
+        listStyle: "none",
+        p: 0,
+        m: 0,
+        display: "grid",
+        gridTemplateColumns: `repeat(${metrics.length}, minmax(0, 1fr))`,
         gap: "10px",
-        p: "14px",
-        borderBottom: borderThin,
       }}
     >
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-        {primaryTag ? <Chip label={primaryTag} size="small" sx={{ backgroundColor: yellow }} /> : null}
-        {restTags.map((tag) => (
-          <Chip key={tag} label={tag} size="small" />
-        ))}
-      </Box>
-      <Box sx={{ display: "flex", gap: "8px" }}>
+      {metrics.map((metric, i) => (
+        <Box
+          component="li"
+          key={metric.label}
+          sx={{
+            backgroundColor: accentAt(i),
+            border: borderThin,
+            borderRadius: "6px",
+            px: "12px",
+            py: "10px",
+            minWidth: 0,
+          }}
+        >
+          <Box
+            sx={{
+              fontFamily: mono,
+              fontWeight: 700,
+              fontSize: "clamp(18px, 2vw, 24px)",
+              lineHeight: 1.1,
+              color: ink,
+              overflowWrap: "anywhere",
+            }}
+          >
+            {metric.value}
+          </Box>
+          <Box sx={{ fontSize: 12, lineHeight: 1.3, mt: "4px", color: ink }}>{metric.label}</Box>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+function Facts({ facts, accent }: { facts: ProjectItem["facts"]; accent: string }) {
+  return (
+    <Box component="dl" sx={{ m: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
+      {factRows.map(({ key, label }) => (
+        <Box key={key} sx={{ borderLeft: `3px solid ${accent}`, pl: "12px" }}>
+          <Box
+            component="dt"
+            sx={{ ...monoLabel, fontSize: 11, letterSpacing: "1.2px", color: textAccent(accent), mb: "2px" }}
+          >
+            {label}
+          </Box>
+          <Box component="dd" sx={{ m: 0, fontSize: 15, lineHeight: 1.55, color: bodyStrong }}>
+            {facts[key]}
+          </Box>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+function Links({ project }: { project: ProjectItem }) {
+  const secondary = {
+    fontFamily: mono,
+    fontSize: 13,
+    fontWeight: 700,
+    color: ink,
+    backgroundColor: paper,
+    border: borderThin,
+    borderRadius: "8px",
+    px: "16px",
+    py: "9px",
+    transition: "background-color .2s ease, color .2s ease",
+    "&:hover": { backgroundColor: ink, color: paper },
+  };
+
+  return (
+    <Box sx={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+      {project.link ? (
         <MuiLink
           href={project.link}
           target="_blank"
           rel="noopener"
           underline="none"
-          sx={{ ...solidButton(orange), fontSize: 13, px: "14px", py: "7px" }}
+          sx={{ ...solidButton(orange), fontSize: 14, px: "18px", py: "9px" }}
         >
-          Live Project ↗
+          {project.linkLabel ?? "Live Project"} ↗
         </MuiLink>
-        {project.repo ? (
-          <MuiLink
-            href={project.repo}
-            target="_blank"
-            rel="noopener"
-            underline="none"
-            sx={{
-              fontFamily: mono,
-              fontSize: 12,
-              fontWeight: 700,
-              color: ink,
-              backgroundColor: paper,
-              border: borderThin,
-              borderRadius: "8px",
-              px: "14px",
-              py: "7px",
-              "&:hover": { backgroundColor: ink, color: paper },
-            }}
-          >
-            View Code ↗
-          </MuiLink>
-        ) : null}
+      ) : null}
+      {project.repo ? (
+        <MuiLink
+          href={project.repo}
+          target="_blank"
+          rel="noopener"
+          underline="none"
+          sx={project.link ? secondary : { ...solidButton(orange), fontSize: 14, px: "18px", py: "9px" }}
+        >
+          View Code ↗
+        </MuiLink>
+      ) : null}
+    </Box>
+  );
+}
+
+function Details({ details, accent }: { details: NonNullable<ProjectItem["details"]>; accent: string }) {
+  return (
+    <Box
+      component="details"
+      sx={{
+        borderTop: borderThin,
+        pt: "12px",
+        "& > summary": {
+          ...monoLabel,
+          fontSize: 12,
+          cursor: "pointer",
+          listStyle: "none",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          color: ink,
+          "&::-webkit-details-marker": { display: "none" },
+          "&::before": {
+            content: '"+"',
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 20,
+            height: 20,
+            border: borderThin,
+            borderRadius: "4px",
+            backgroundColor: accent,
+            fontSize: 14,
+            lineHeight: 1,
+          },
+        },
+        "&[open] > summary::before": { content: '"–"' },
+      }}
+    >
+      <Box component="summary">How it works</Box>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "12px", mt: "14px" }}>
+        {details.map((d) => (
+          <Box key={d.heading}>
+            <Typography sx={{ fontWeight: 700, fontSize: 14.5, color: ink, mb: "2px" }}>{d.heading}</Typography>
+            <Typography sx={{ fontSize: 14, lineHeight: 1.6, color: bodyMuted }}>{d.body}</Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   );
 }
 
-function DescriptionBlock({ project }: { project: ProjectItem }) {
-  return (
-    <Typography
-      sx={{
-        fontSize: 12.5,
-        lineHeight: 1.6,
-        color: bodyMuted,
-        borderLeft: `3px solid ${blue}`,
-        pl: "12px",
-      }}
-    >
-      {project.info.description}
-    </Typography>
-  );
-}
-
-/** Fills a thumbnail slot: real media (video hover-plays, image is static) or the hatch fallback. */
-function Thumbnail({ media, hatchStep }: { media?: ProjectMedia; hatchStep: number }) {
-  if (!media) {
-    return <Box sx={{ position: "absolute", inset: 0, background: hatch(hatchStep) }} />;
-  }
-  return media.type === "video" ? (
-    <HoverPlayVideo src={media.src} poster={media.poster ?? ""} alt={media.caption} />
-  ) : (
-    <Image src={media.src} alt={media.caption} fill sizes="220px" style={{ objectFit: "cover" }} />
-  );
-}
-
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-
-/**
- * Derives an actual thumbnail box from the media's real aspect ratio, holding the section's
- * target area (baseWidth × baseHeight) roughly constant so rows stay comparable in visual
- * weight across cards, while the box shape follows the source image/video instead of forcing
- * every project into an identical crop. Falls back to the base rectangle when a section has no
- * media yet (hatch placeholder — no real dimensions to key off of).
- */
-function thumbSize(media: ProjectMedia | undefined, baseWidth: number, baseHeight: number) {
-  if (!media?.width || !media?.height) return { width: baseWidth, height: baseHeight };
-  const aspect = media.width / media.height;
-  const area = baseWidth * baseHeight;
-  const height = clamp(Math.sqrt(area / aspect), baseHeight * 0.55, baseHeight * 1.8);
-  const width = clamp(height * aspect, baseWidth * 0.55, baseWidth * 1.8);
-  return { width: Math.round(width), height: Math.round(height) };
-}
-
-/**
- * One breakdown row (Challenge/Process/Outcome): a bordered white card holding label + text
- * beside a plain rectangular thumbnail — never rotated, never circular. `side` puts the
- * thumbnail on the left or right of the text; baseWidth/baseHeight set the section's target
- * size, adjusted per-project via `thumbSize` to match the real media's aspect ratio.
- */
-function BreakdownRow({
-  label,
-  color,
-  marker,
-  text,
-  media,
-  side,
-  baseWidth,
-  baseHeight,
-}: {
-  label: string;
-  color: string;
-  marker?: ReactNode;
-  text: string;
-  media?: ProjectMedia;
-  side: "left" | "right";
-  baseWidth: number;
-  baseHeight: number;
-}) {
-  const { width, height } = thumbSize(media, baseWidth, baseHeight);
-
-  const thumb = (
-    <Box
-      sx={{
-        position: "relative",
-        width,
-        height,
-        flexShrink: 0,
-        borderRadius: "3px",
-        overflow: "hidden",
-        border: `1.5px solid ${ink}`,
-      }}
-    >
-      <Thumbnail media={media} hatchStep={6} />
-    </Box>
-  );
-
-  const copy = (
-    <Box sx={{ flex: 1, minWidth: 0 }}>
-      <RowLabel text={label} color={color} marker={marker} />
-      <Typography sx={{ fontSize: 13, lineHeight: 1.5, color: bodyMuted }}>{text}</Typography>
-    </Box>
-  );
+function ProjectCase({ project, index }: { project: ProjectItem; index: number }) {
+  const accent = accentAt(index);
+  const mediaFirst = index % 2 === 0;
+  const number = String(index + 1).padStart(2, "0");
 
   return (
     <Box
-      sx={{
-        border: `1.5px solid ${ink}`,
-        borderRadius: "4px",
-        backgroundColor: card,
-        p: "12px",
-        display: "flex",
-        alignItems: "flex-start",
-        gap: "12px",
-      }}
-    >
-      {side === "left" ? thumb : copy}
-      {side === "left" ? copy : thumb}
-    </Box>
-  );
-}
-
-function ProjectRow({ project }: { project: ProjectItem }) {
-  return (
-    <Box
+      component="article"
       className="reveal"
+      aria-labelledby={`project-${index}`}
       sx={{
         backgroundColor: card,
-        border: borderThin,
-        borderRadius: "2px",
-        overflow: "hidden",
-        boxShadow: shadow(6),
-        display: "flex",
-        flexDirection: "column",
-        transition: "transform .25s ease, box-shadow .25s ease",
-        "&:hover": { transform: "translateY(-4px)", boxShadow: shadow(9) },
+        border,
+        borderRadius: "4px",
+        boxShadow: shadow(8),
+        p: { xs: "18px", sm: "26px", lg: "32px" },
+        display: "grid",
+        gap: { xs: "24px", lg: "36px" },
+        gridTemplateColumns: "minmax(0, 1fr)",
+        alignItems: "start",
+        "@media (min-width: 1000px)": {
+          gridTemplateColumns: mediaFirst ? "minmax(0, 7fr) minmax(0, 5fr)" : "minmax(0, 5fr) minmax(0, 7fr)",
+        },
       }}
     >
-      <HeroMedia project={project} />
-      <MetaRow project={project} />
-      <Box sx={{ p: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
-        <DescriptionBlock project={project} />
-        <BreakdownRow
-          label="Challenge"
-          color={orange}
-          marker={<Box sx={{ width: 8, height: 8, backgroundColor: orange, flexShrink: 0 }} />}
-          text={project.info.challenge}
-          media={mediaFor(project, "challenge")}
-          side="right"
-          baseWidth={84}
-          baseHeight={62}
-        />
-        <BreakdownRow
-          label="Process"
-          color={blue}
-          text={project.info.process}
-          media={mediaFor(project, "process")}
-          side="left"
-          baseWidth={110}
-          baseHeight={78}
-        />
-        <BreakdownRow
-          label="Outcome"
-          color={yellow}
-          marker={<TriangleMarker />}
-          text={project.info.outcome}
-          media={mediaFor(project, "outcome")}
-          side="right"
-          baseWidth={64}
-          baseHeight={48}
-        />
+      <Box
+        sx={{
+          minWidth: 0,
+          "@media (min-width: 1000px)": { order: mediaFirst ? 0 : 1, position: "sticky", top: "96px" },
+        }}
+      >
+        <ProjectGallery media={project.media} accent={accent} title={project.title} />
+      </Box>
+
+      <Box sx={{ minWidth: 0, display: "flex", flexDirection: "column", gap: "18px" }}>
+        <Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "10px", mb: "10px", flexWrap: "wrap" }}>
+            <Box
+              sx={{
+                fontFamily: mono,
+                fontWeight: 700,
+                fontSize: 13,
+                backgroundColor: accent,
+                border: borderThin,
+                borderRadius: "4px",
+                px: "8px",
+                py: "1px",
+              }}
+            >
+              {number}
+            </Box>
+            <Box sx={{ ...monoLabel, fontSize: 11.5, letterSpacing: "1.2px", color: bodyMuted }}>
+              {project.kind} · {project.year}
+            </Box>
+          </Box>
+          <Typography
+            id={`project-${index}`}
+            variant="h3"
+            sx={{ fontFamily: display, fontSize: "clamp(30px, 3.4vw, 40px)", lineHeight: 1.05, m: 0, mb: "12px" }}
+          >
+            {project.title}
+          </Typography>
+          <Typography sx={{ fontSize: 18, lineHeight: 1.5, fontWeight: 600, color: ink, m: 0 }}>
+            {project.hook}
+          </Typography>
+        </Box>
+
+        <Metrics metrics={project.metrics} />
+        <Facts facts={project.facts} accent={accent} />
+
+        <Box>
+          <Box sx={{ ...monoLabel, fontSize: 11, letterSpacing: "1.2px", color: bodyMuted, mb: "8px" }}>
+            Stack
+          </Box>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {project.stack.map((skill, i) => (
+              <Chip key={skill} label={skill} size="small" sx={i === 0 ? { backgroundColor: yellow } : undefined} />
+            ))}
+          </Box>
+        </Box>
+
+        <Links project={project} />
+        {project.details?.length ? <Details details={project.details} accent={accent} /> : null}
       </Box>
     </Box>
   );
@@ -425,18 +366,11 @@ export default function ProjectsCard() {
       <SectionShapes shapes={shapes} />
 
       <Box sx={{ position: "relative", zIndex: 1, maxWidth, width: "stretch" }}>
-        <SectionHeader number="03" title="Selected Work" />
+        <SectionHeader number="01" title="Selected Work" />
 
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "24px",
-            "@media (min-width: 900px)": { gridTemplateColumns: "repeat(2, 1fr)" },
-          }}
-        >
-          {projectsData.map((project) => (
-            <ProjectRow key={project.title} project={project} />
+        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: "32px", md: "48px" } }}>
+          {projectsData.map((project, index) => (
+            <ProjectCase key={project.title} project={project} index={index} />
           ))}
         </Box>
       </Box>
