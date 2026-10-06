@@ -1,0 +1,56 @@
+{
+  "_note": "Jackson's own answers to common interview questions, in his voice. The portfolio chat paraphrases these in the third person. Story questions use STAR (situation, task, action, result) and are told as a short narrative; the rest use a plain answer. Keep everything true.",
+  "entries": [
+    {
+      "topic": "Tell me about Jackson",
+      "answer": "I'm a full-stack software engineer who leans toward the front end, with 4+ years of production experience in JavaScript and TypeScript. At Sekady Capital I owned products end to end, from a fund control dashboard to AWS infrastructure serving 15,000 users, and on my own I've built an AI-powered card recommender, a real-time C# trading screen, and a Three.js data visualization. I came to software after seven years supporting non-verbal kids, so I design around what people actually do, and I care about maintainable, well-tested code."
+    },
+    {
+      "topic": "What are your strengths",
+      "summary": "I break problems into manageable parts, design iteratively, and improve the work based on testing and feedback. I take critique constructively and use it to get better.",
+      "star": {
+        "situation": "The first full test of edh-tool, my AI-powered Magic: The Gathering card recommender, exposed real problems: obscure junk cards floated to the top, one generic card showed up in five of six themes, and in one theme a single card was recommended to every player.",
+        "task": "I needed recommendations that were varied and genuinely strong, not just obscure.",
+        "action": "I broke the scoring into separate factors and fixed each one with its own test: obscurity moved to a log scale because popularity follows a power law, the hidden-gem bonus was gated by card quality so weak cards couldn't ride it, cards missing a theme's core tag were damped, and hard role slots became soft nudges.",
+        "result": "Across 200 simulated players, each theme now surfaces 21–40 distinct cards, and only 28–53% of picks come from the static top five."
+      }
+    },
+    {
+      "topic": "How I handle mistakes",
+      "summary": "I own it, find the root cause, and add something that keeps it from happening again, usually a test or a check.",
+      "star": {
+        "situation": "While building edh-tool, I had an AI model tag thousands of cards in batches, and during a review I noticed one card's tags had landed on its neighbor.",
+        "task": "Bad tags would silently corrupt every recommendation downstream, so I had to find the cause and make it impossible to repeat before tagging the full card pool.",
+        "action": "I traced it to the model having to copy back long 36-character card IDs. I switched requests to short references plus the card name, matched answers on both, refused duplicates, and automatically retried any card without an accepted answer.",
+        "result": "Across the full 12,580-card run, only 4 answers failed the match check, and re-running them cost a few cents. I handle my own bugs the same way: on my trading app, unit tests caught a price-rounding bug on fine-tick markets, and I fixed it and pinned it with a regression test."
+      }
+    },
+    {
+      "topic": "My weaknesses",
+      "summary": "Most of my professional experience is in JavaScript and TypeScript, so statically typed languages like C# are something I'm actively relearning. I'm also still building depth in large-scale software architecture compared with full-stack product work.",
+      "star": {
+        "situation": "I wanted to work on C# desktop tools, but I hadn't written C# in over five years and had never used WPF.",
+        "task": "I set out to build a real-time trading screen good enough to show, and to actually learn the stack in the process.",
+        "action": "I mapped each C# and WPF concept to its JavaScript/TypeScript equivalent, like properties versus getters and events versus addEventListener. I made unit tests a requirement for the tricky logic, and I read through the critical functions myself instead of trusting generated code.",
+        "result": "The app handles up to 17,000 order-book updates per second with 82 unit tests. For architecture, I write down trade-offs, test the risky parts first, and get reviews early."
+      }
+    },
+    {
+      "topic": "Describe a conflict and how you resolved it",
+      "star": {
+        "situation": "As a behavioral support specialist, I worked with children with disabilities, most of them non-verbal, and conflicts came up almost daily. Usually the root cause was communication: a child couldn't tell me what they needed, or didn't understand why something had to happen.",
+        "task": "My job was to calm the situation and still get through what the day required, without forcing it.",
+        "action": "I stayed calm and slowed down, treated each conflict as a communication problem rather than defiance, and kept looking for a way to show why something needed to happen. Patience was the whole strategy.",
+        "result": "Slowing down and closing the communication gap resolved most conflicts, and it's how I approach disagreements at work too: find what isn't being understood, and explain the why."
+      }
+    },
+    {
+      "topic": "What I do for fun",
+      "answer": "Outside of coding, I play video and tabletop games with friends, hike trails with my dog Sully, do woodworking projects, and fish Idaho rivers."
+    },
+    {
+      "topic": "What salary are you looking for?",
+      "answer": "I'm looking for compensation that's competitive for the role and its responsibilities. I'm flexible and happy to discuss specifics directly."
+    }
+  ]
+}

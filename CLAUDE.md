@@ -149,4 +149,5 @@ each), `stack` (5-7 skills), links, and an optional `details` list rendered as a
 
 - `.env.local` also defines S3 and Spotify credentials, and `package.json` includes `@aws-sdk/client-s3`, but
   nothing uses them yet.
-- [README.md](README.md) is the unmodified `create-next-app` template and does not describe this project.
+- [README.md](README.md) is the public project write-up (screenshots in `docs/img/`). Keep it in sync when
+  features, env vars, or the content files change; the portfolio chat also reads it through GitHub.

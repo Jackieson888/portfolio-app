@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Box, Typography } from "@mui/material";
@@ -23,11 +30,11 @@ import {
   yellow,
 } from "@/src/tokens";
 
+/** The questions recruiters actually ask. Behavioral ones are answered from workingStyleData.json. */
 const SUGGESTIONS = [
-  "What did Jackson own at Sekady Capital?",
-  "How does edh-tool pick its recommendations?",
-  "What's his experience with AWS?",
-  "Is he a good fit for a front-end role?",
+  "Tell me about Jackson",
+  "How does he handle mistakes?",
+  "What are his weaknesses?",
 ];
 
 const MAX_CHARS = 600;
@@ -131,7 +138,11 @@ export default function PortfolioChat() {
           "&:hover": { transform: "translate(2px, 2px)", boxShadow: shadow(3) },
         }}
       >
-        {open ? <CloseRounded sx={{ fontSize: { xs: 22, sm: 18 } }} /> : <AutoAwesomeRounded sx={{ fontSize: { xs: 22, sm: 18 } }} />}
+        {open ? (
+          <CloseRounded sx={{ fontSize: { xs: 22, sm: 18 } }} />
+        ) : (
+          <AutoAwesomeRounded sx={{ fontSize: { xs: 22, sm: 18 } }} />
+        )}
         <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
           {open ? "Close" : "Ask about my work"}
         </Box>
@@ -172,12 +183,30 @@ export default function PortfolioChat() {
             }}
           >
             <Box>
-              <Typography sx={{ fontFamily: display, fontSize: 22, fontWeight: 700, lineHeight: 1.1, m: 0 }}>
-                Ask about Jackson&apos;s work
+              <Typography
+                sx={{
+                  fontFamily: display,
+                  fontSize: 22,
+                  fontWeight: 700,
+                  lineHeight: 1.1,
+                  m: 0,
+                }}
+              >
+                Ask about Jackson
               </Typography>
-              <Typography sx={{ fontSize: 12.5, lineHeight: 1.4, color: "#c9c4b4", mt: "4px" }}>
-                An AI assistant that answers from his resume and case studies. It can make mistakes, so check
-                the resume for anything important.
+              <Typography
+                sx={{
+                  fontSize: 12.5,
+                  lineHeight: 1.4,
+                  color: "#c9c4b4",
+                  mt: "4px",
+                }}
+              >
+                AI assistant that answers from resume, projects, and public
+                data.&nbsp;
+                <em style={{ color: "#a19d8f" }}>
+                  AI can make mistakes, so verify critical information.
+                </em>
               </Typography>
             </Box>
             <Box
@@ -207,14 +236,25 @@ export default function PortfolioChat() {
           <Box
             ref={listRef}
             aria-live="polite"
-            sx={{ flex: 1, overflowY: "auto", px: "16px", py: "16px", display: "flex", flexDirection: "column", gap: "12px", backgroundColor: paper }}
+            sx={{
+              flex: 1,
+              overflowY: "auto",
+              px: "16px",
+              py: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              backgroundColor: paper,
+            }}
           >
             {messages.length === 0 ? (
               <Box>
                 <Typography sx={{ fontSize: 14.5, color: ink, mb: "12px" }}>
                   Try one of these, or ask your own:
                 </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: "8px" }}
+                >
                   {SUGGESTIONS.map((s, i) => (
                     <Box
                       key={s}
@@ -272,13 +312,30 @@ export default function PortfolioChat() {
             })}
 
             {status === "submitted" ? (
-              <Box sx={{ alignSelf: "flex-start", fontFamily: mono, fontSize: 12, color: bodyMuted }}>Thinking…</Box>
+              <Box
+                sx={{
+                  alignSelf: "flex-start",
+                  fontFamily: mono,
+                  fontSize: 12,
+                  color: bodyMuted,
+                }}
+              >
+                Thinking…
+              </Box>
             ) : null}
 
             {error ? (
               <Box
                 role="alert"
-                sx={{ fontSize: 13.5, color: ink, backgroundColor: "#fde3d8", border: borderThin, borderRadius: "6px", px: "12px", py: "9px" }}
+                sx={{
+                  fontSize: 13.5,
+                  color: ink,
+                  backgroundColor: "#fde3d8",
+                  border: borderThin,
+                  borderRadius: "6px",
+                  px: "12px",
+                  py: "9px",
+                }}
               >
                 {errorText(error)}
               </Box>
@@ -288,13 +345,22 @@ export default function PortfolioChat() {
           <Box
             component="form"
             onSubmit={onSubmit}
-            sx={{ display: "flex", alignItems: "flex-end", gap: "8px", p: "12px", borderTop: borderThin, backgroundColor: card }}
+            sx={{
+              display: "flex",
+              alignItems: "flex-end",
+              gap: "8px",
+              p: "12px",
+              borderTop: borderThin,
+              backgroundColor: card,
+            }}
           >
             <Box
               component="textarea"
               ref={inputRef}
               value={input}
-              onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value.slice(0, MAX_CHARS))}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                setInput(e.target.value.slice(0, MAX_CHARS))
+              }
               onKeyDown={(e: ReactKeyboardEvent<HTMLTextAreaElement>) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -318,7 +384,10 @@ export default function PortfolioChat() {
                 py: "10px",
                 maxHeight: 120,
                 outline: "none",
-                "&:focus-visible": { outline: `3px solid ${blue}`, outlineOffset: "1px" },
+                "&:focus-visible": {
+                  outline: `3px solid ${blue}`,
+                  outlineOffset: "1px",
+                },
               }}
             />
             <Box
@@ -340,7 +409,10 @@ export default function PortfolioChat() {
                 borderRadius: "8px",
                 cursor: "pointer",
                 "&:disabled": { opacity: 0.45, cursor: "not-allowed" },
-                "&:hover:not(:disabled)": { backgroundColor: ink, color: paper },
+                "&:hover:not(:disabled)": {
+                  backgroundColor: ink,
+                  color: paper,
+                },
               }}
             >
               {busy ? <StopRounded /> : <ArrowUpwardRounded />}
